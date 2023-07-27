@@ -15,17 +15,19 @@
 
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
 
             <!-- Page Heading -->
-            <header class="bg-white shadow">
-                <div class="mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            {{-- <header class="bg-white shadow">
+                <div class="px-4 py-6 mx-auto sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
-            </header>
+            </header> --}}
 
             <!-- Page Content -->
             <main>
