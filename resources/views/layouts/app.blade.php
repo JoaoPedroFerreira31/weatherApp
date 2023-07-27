@@ -8,7 +8,7 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
+        {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap"> --}}
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
@@ -18,7 +18,7 @@
         <script src="https://cdn.tailwindcss.com"></script>
 
     </head>
-    <body class="font-sans antialiased">
+    <body class="antialiased font-poppins">
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
 
