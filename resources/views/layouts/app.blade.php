@@ -19,7 +19,7 @@
 
     </head>
     <body class="antialiased font-poppins">
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen bg-[#E3F4FE]">
             @include('layouts.navigation')
 
             <!-- Page Heading -->
