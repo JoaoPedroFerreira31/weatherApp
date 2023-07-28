@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="flex items-center shrink-0">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block w-auto h-10 text-gray-900" />
+                        <x-application-logo class="block w-auto h-10"/>
                     </a>
                     <span class="px-4 text-lg text-gray-900">Weather App</span>
                 </div>
