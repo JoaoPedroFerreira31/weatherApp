@@ -16,13 +16,13 @@
                     <span>14:55</span>
                     <span>Tuesday</span>
                 </div>
-                <div class="flex flex-col px-4 lg:px-6 lg:align-middle">
+                <div class="flex flex-col px-4 lg:px-5 lg:align-middle">
                     <span class="text-2xl">@lang('welcome_back') <span>{{ Auth::user()->name }}</span></span>
-                    <span class="pt-1">@lang('check_out today´s_weather_information')</span>
+                    <span class="pt-1 whitespace-nowrap">@lang('check_out today´s_weather_information')</span>
                 </div>
             </div>
             {{-- Weather text information in large screens --}}
-            <div class="hidden p-4 overflow-hidden bg-white shadow-lg lg:block rounded-2xl">
+            <div class="hidden p-5 overflow-hidden bg-white shadow-lg lg:block rounded-2xl">
                 <p class="font-medium text-gray-900">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
             </div>
         </div>
@@ -45,7 +45,7 @@
                     <span class="-mt-3 text-[75px] text-center">60 %</span>
                     <span class="-mt-5 -ml-20 text-center">Normal</span>
                 </div>
-                <div class="inline-flex justify-center w-full p-4 gap-x-4">
+                <div class="inline-flex justify-center w-full p-5 gap-x-4">
                     <div class="flex flex-col gap-y-0.5">
                         <span class="text-xs text-gray-400 pl-0.5">@lang('good')</span>
                         <span class="py-2 bg-gray-300 px-9 rounded-xl"></span>
@@ -158,6 +158,11 @@
                         <td class="px-2 py-3 text-center">30°C</td>
                         <td class="px-2 py-3 text-center">19°C</td>
                     </tr>
+                    <tr class="text-lg text-gray-500 dark:text-white">
+                        <th scope="row" class="px-4 py-2 font-medium whitespace-nowrap dark:text-white">Saturday</th>
+                        <td class="px-2 py-3 text-center">28°C</td>
+                        <td class="px-2 py-3 text-center">19°C</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -166,8 +171,21 @@
         {{-- 2 ROW --}}
         {{-- Weather Info card --}}
         <div class="py-2 lg:col-span-2 lg:px-4 lg:w-full">
-            <div class="p-12 overflow-hidden bg-white shadow-lg lg:p-24 rounded-2xl">
-                @lang('welcome_to_your_dashboard')!
+            <div class="p-12 overflow-hidden bg-white shadow-lg lg:p-10 rounded-2xl">
+                <div class="grid grid-cols-2">
+                    <img class="mx-auto w-[160px] h-[160px] object-fit" src="{{asset('weather_icon_pack/sun.gif')}}" alt="">
+                    <div class="flex flex-col gap-0 align-middle">
+                        <div class="inline-flex my-auto text-2xl gap-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 my-auto">
+                                <path fill-rule="evenodd"
+                                    d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="font-medium">Lisboa</span>
+                        </div>
+                        <span class="lg:text-[75px] text-[50px] font-medium">25 ° C</span>
+                    </div>
+                </div>
             </div>
         </div>
         {{-- END Weather Info card --}}
