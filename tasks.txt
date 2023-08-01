@@ -1,0 +1,5 @@
+- Adicionar tradução
+- Criar pagina de configuração de utilizador
+- Colocar dados dinamicos
+- Tornar site responsive
+
