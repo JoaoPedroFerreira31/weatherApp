@@ -63,30 +63,8 @@
         </div>
         {{-- END Humidity Card --}}
 
-        {{-- Forecast of the week card --}}
-        {{-- <div class="flex flex-col bg-white shadow-lg rounded-2xl">
-            <h1 class="pt-6 pl-6">Humidity</h1>
-            <div class="flex flex-col gap-0">
-                <span class="-mt-3 text-[75px] text-center">60 %</span>
-                <span class="-mt-5 -ml-20 text-center">Normal</span>
-            </div>
-            <div class="inline-flex justify-center w-full p-4 gap-x-4">
-                <div class="flex flex-col gap-y-0.5">
-                    <span class="text-xs text-gray-400 pl-0.5">@lang('good')</span>
-                    <span class="py-2 bg-gray-300 px-9 rounded-xl"></span>
-                </div>
-                <div class="flex flex-col gap-y-0.5">
-                    <span class="text-xs text-gray-400 pl-0.5">@lang('normal')</span>
-                    <span class="py-2 bg-gray-300 px-9 rounded-xl"></span>
-                </div>
-                <div class="flex flex-col gap-y-0.5">
-                    <span class="text-xs text-gray-400 pl-0.5">@lang('bad')</span>
-                    <span class="py-2 bg-gray-300 px-9 rounded-xl"></span>
-                </div>
-            </div>
-        </div> --}}
         <div
-            class="flex flex-col px-12 py-6 mx-auto bg-white shadow-lg rounded-2xl lg:mx-20 lg:p-6 lg:mt-2 lg:col-span-2 lg:row-span-2">
+            class="flex flex-col px-12 py-6 mx-5 bg-white shadow-lg rounded-2xl lg:p-6 lg:mt-2 lg:col-span-2 lg:row-span-2">
             <div class="flex flex-col mb-3">
                 <h1 class="font-medium">@lang('forecast_of_the_week')</h1>
                 <div class="inline-flex items-center text-xs text-gray-500 gap-x-1">
@@ -191,41 +169,72 @@
         {{-- END Weather Info card --}}
 
         {{-- Sunrise Info Card --}}
-        <div class="py-2 mx-auto lg:px-4 lg:col-span-2">
-            <div class="p-12 overflow-hidden bg-white shadow-lg lg:p-24 rounded-2xl">
-                @lang('welcome_to_your_dashboard')!
+        <div class="py-2 mx-auto lg:px-4 lg:col-span-2 lg:w-full">
+            <div class="flex flex-col p-24 overflow-hidden bg-white shadow-lg lg:p-4 rounded-2xl">
+                <img src="{{asset('weather_icon_pack/sunrise.gif')}}" class="mx-auto w-[155px] h-[155px]" alt="">
+                <div class="inline-flex justify-between lg:px-6">
+                    <div class="flex flex-col">
+                        <span class="text-lg font-medium text-gray-900">@lang('sunrise')</span>
+                        <span class="text-gray-500">6:30</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-lg font-medium text-gray-900">@lang('sunset')</span>
+                        <span class="text-gray-500">20:55</span>
+                    </div>
+                </div>
             </div>
         </div>
         {{-- END Sunrise Info Card --}}
 
         {{-- 3 ROW --}}
         <div class="grid grid-cols-3 py-2 mx-auto lg:px-4 lg:w-full lg:col-span-2 gap-x-2 lg:gap-x-6">
-            <div class="px-8 py-24 overflow-hidden bg-white shadow-lg lg:py-24 rounded-2xl">
-                {{-- @lang('welcome_to_your_dashboard')! --}}
-                teste
+            <div class="px-8 py-24 overflow-hidden bg-white shadow-lg lg:py-8 rounded-2xl">
+                <div class="flex flex-col justify-center gap-y-1">
+                    <span class="text-xl font-medium text-center text-gray-900">24 ° C</span>
+                    <img src="{{asset('weather_icon_pack/sun.gif')}}" alt="">
+                    <span class="text-xl font-medium text-center text-gray-900">15:00h</span>
+                </div>
             </div>
-            <div class="px-8 py-24 overflow-hidden bg-white shadow-lg lg:py-24 rounded-2xl">
-                {{-- @lang('welcome_to_your_dashboard')! --}}
-                teste
+            <div class="px-8 py-24 overflow-hidden bg-white shadow-lg lg:py-8 rounded-2xl">
+                <div class="flex flex-col justify-center gap-y-1">
+                    <span class="text-xl font-medium text-center text-gray-900">24 ° C</span>
+                    <img src="{{asset('weather_icon_pack/sun.gif')}}" alt="">
+                    <span class="text-xl font-medium text-center text-gray-900">16:00h</span>
+                </div>
             </div>
-            <div class="px-8 py-24 overflow-hidden bg-white shadow-lg lg:py-24 rounded-2xl">
-                {{-- @lang('welcome_to_your_dashboard')! --}}
-                teste
+            <div class="px-8 py-24 overflow-hidden bg-white shadow-lg lg:py-8 rounded-2xl">
+                <div class="flex flex-col justify-center gap-y-1">
+                    <span class="text-xl font-medium text-center text-gray-900">24 ° C</span>
+                    <img src="{{asset('weather_icon_pack/sun.gif')}}" alt="">
+                    <span class="text-xl font-medium text-center text-gray-900">17:00h</span>
+                </div>
             </div>
         </div>
 
         {{-- Wind Card --}}
-        <div class="py-2 mx-auto lg:px-4 lg:col-span-2">
-            <div class="p-12 overflow-hidden bg-white shadow-lg lg:p-24 rounded-2xl">
-                @lang('welcome_to_your_dashboard')!
+        <div class="py-2 mx-auto lg:px-4 lg:col-span-2 lg:w-full">
+            <div class="flex flex-col p-24 overflow-hidden bg-white shadow-lg lg:p-4 rounded-2xl">
+                <img src="{{asset('weather_icon_pack/wind.gif')}}" class="mx-auto w-[155px] h-[155px]" alt="">
+                <div class="inline-flex justify-center lg:px-6">
+                    <div class="flex flex-col text-center">
+                        <span class="text-xl font-medium text-gray-900">@lang('wind')</span>
+                        <span class="text-lg text-gray-500">32 km/h</span>
+                    </div>
+                </div>
             </div>
         </div>
         {{-- END Wind Card --}}
 
         {{-- UV Card --}}
-        <div class="py-2 mx-auto lg:px-4 lg:col-span-2">
-            <div class="p-12 overflow-hidden bg-white shadow-lg lg:p-24 rounded-2xl">
-                @lang('welcome_to_your_dashboard')!
+        <div class="py-2 mx-auto lg:px-4 lg:col-span-2 lg:w-full">
+            <div class="flex flex-col p-24 overflow-hidden bg-white shadow-lg lg:p-4 rounded-2xl">
+                <img src="{{asset('weather_icon_pack/uv-protection.gif')}}" class="mx-auto w-[155px] h-[155px]" alt="">
+                <div class="inline-flex justify-center lg:px-6">
+                    <div class="flex flex-col text-center">
+                        <span class="text-xl font-medium text-gray-900">@lang('uv_index')</span>
+                        <span class="text-lg text-gray-500">Low</span>
+                    </div>
+                </div>
             </div>
         </div>
         {{-- END UV Card --}}
