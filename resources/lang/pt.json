@@ -1,3 +1,14 @@
 {
-    "welcome_back": "Bem vindo de volta"
+    "welcome_back": "Bem vindo de volta",
+    "humidity": "Humidade",
+    "forecast_of_the_week": "Temperatura da Semana",
+    "bad": "Mau",
+    "normal": "Normal",
+    "good": "Bom",
+    "day": "Dia",
+    "night": "Noite",
+    "wind": "Vento",
+    "uv_index": "Indice UV",
+    "sunrise": "Nascer do sol",
+    "sunset": "Pôr do sol"
 }
