@@ -11,11 +11,12 @@
         {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap"> --}}
 
         <!-- Styles -->
-        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
 
         <!-- Scripts -->
-        <script src="{{ asset('js/app.js') }}" defer></script>
-        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="{{ mix('js/app.js') }}" defer></script>
+        {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
 
     </head>
     <body class="antialiased font-poppins">

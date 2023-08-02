@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LanguageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+/* Language switch */
+Route::get('lang/{lang}', [LanguageController::class, 'switch_lang'])->name('lang.switch');
 
 Route::get('/', function () {
     return view('welcome');
