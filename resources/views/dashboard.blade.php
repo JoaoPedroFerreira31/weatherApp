@@ -5,20 +5,20 @@
         </h2>
     </x-slot> --}}
 
-    <div class="grid grid-cols-1 py-8 lg:grid-cols-6 lg:gap-y-4 lg:px-8">
+    <div x-data="data()" class="grid grid-cols-1 py-8 lg:grid-cols-6 lg:gap-y-4 lg:px-8">
 
         {{-- 1 ROW --}}
         {{-- Welcome card --}}
         <div class="py-2 mx-auto lg:col-span-2 lg:gap-3 lg:flex lg:w-full lg:flex-col lg:px-4">
             <div
-                class="p-6 overflow-hidden font-medium bg-white divide-black shadow-lg lg:inline-flex lg:divide-x-4 rounded-2xl lg:gap-6 lg:p-10">
-                <div class="hidden text-2xl lg:flex lg:flex-col">
-                    <span>14:55</span>
-                    <span>Tuesday</span>
+                class="p-6 overflow-hidden font-medium bg-white divide-black shadow-lg lg:inline-flex lg:divide-x-2 rounded-2xl lg:gap-6 lg:p-10">
+                <div class="hidden text-xl whitespace-nowrap lg:flex lg:flex-col">
+                    <span x-text="clock"></span>
+                    <span x-text="weekday"></span>
                 </div>
                 <div class="flex flex-col px-4 lg:px-5 lg:align-middle">
-                    <span class="text-2xl">@lang('welcome_back') <span>{{ Auth::user()->name }}</span></span>
-                    <span class="pt-1 whitespace-nowrap">@lang('check_out today´s_weather_information')</span>
+                    <span class="text-xl">@lang('welcome_back') <span>{{ Auth::user()->name }}</span></span>
+                    <span class="pt-1 whitespace-nowrap">@lang('check_out_todays_weather_information')</span>
                 </div>
             </div>
             {{-- Weather text information in large screens --}}
@@ -240,3 +240,31 @@
         {{-- END UV Card --}}
     </div>
 </x-app-layout>
+<script>
+    function data() {
+        return {
+            clock: null,
+            weekday: null,
+            init(){
+                this.weekday = new Date().toLocaleDateString(locale, {weekday: 'long'});
+
+                this.startClock();
+                setInterval(() =>{
+                    this.startClock();
+                }, 1000);
+            },
+            fetchData() {
+
+            },
+            startClock() {
+                let hours = null;
+                if(locale === 'en') {
+                    hours = new Date().toLocaleTimeString(locale, {hour: '2-digit', minute:'2-digit'});
+                } else {
+                    hours = new Date().toLocaleTimeString(locale);
+                }
+                this.clock = hours;
+            },
+        }
+    }
+</script>
