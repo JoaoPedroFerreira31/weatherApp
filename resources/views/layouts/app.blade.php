@@ -37,3 +37,6 @@
         </div>
     </body>
 </html>
+<script>
+    let locale = "{{ app()->getLocale() ?? 'en' }}";
+</script>
