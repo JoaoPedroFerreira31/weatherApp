@@ -10,5 +10,8 @@
     "wind": "Wind",
     "uv_index": "UV Index",
     "sunrise": "Sunrise",
-    "sunset": "Sunset"
+    "sunset": "Sunset",
+    "check_out_todays_weather_information": "Check out weather today's information",
+    "log_out": "Log Out",
+    "dashboard": "Dashboard"
 }
