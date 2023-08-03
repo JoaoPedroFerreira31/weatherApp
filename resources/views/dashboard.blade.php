@@ -5,8 +5,7 @@
         </h2>
     </x-slot> --}}
 
-    <div x-data="data()" class="grid grid-cols-1 py-8 lg:grid-cols-6 lg:gap-y-4 lg:px-8">
-
+    <div x-data="data()" class="grid grid-cols-1 py-8 lg:grid-cols-6 lg:gap-y-4 lg:px-8" x-cloak>
         {{-- 1 ROW --}}
         {{-- Welcome card --}}
         <div class="py-2 mx-auto lg:col-span-2 lg:gap-3 lg:flex lg:w-full lg:flex-col lg:px-4">
@@ -14,11 +13,12 @@
                 class="p-6 overflow-hidden font-medium bg-white divide-black shadow-lg lg:inline-flex lg:divide-x-2 rounded-2xl lg:gap-6 lg:p-10">
                 <div class="hidden text-xl whitespace-nowrap lg:flex lg:flex-col">
                     <span x-text="clock"></span>
-                    <span x-text="weekday"></span>
+                    <span x-text="weekday" class="capitalize"></span>
                 </div>
                 <div class="flex flex-col px-4 lg:px-5 lg:align-middle">
                     <span class="text-xl">@lang('welcome_back') <span>{{ Auth::user()->name }}</span></span>
                     <span class="pt-1 whitespace-nowrap">@lang('check_out_todays_weather_information')</span>
+                    <span class="pt-1 text-xs whitespace-nowrap">Powered by <a href="https://www.weatherapi.com/" title="Free Weather API">WeatherAPI.com</a></span>
                 </div>
             </div>
             {{-- Weather text information in large screens --}}
@@ -42,10 +42,10 @@
             <div class="flex flex-col bg-white shadow-lg rounded-2xl">
                 <h1 class="pt-4 pl-6 font-medium">@lang('humidity')</h1>
                 <div class="flex flex-col gap-0">
-                    <span class="-mt-3 text-[75px] text-center">60 %</span>
+                    <span class="-mt-3 text-[75px] text-center" x-text="(weatherData?.humidity ?? 0) + ' %'  "></span>
                     <span class="-mt-5 -ml-20 text-center">Normal</span>
                 </div>
-                <div class="inline-flex justify-center w-full p-5 gap-x-4">
+                <div class="inline-flex justify-center w-full p-7 gap-x-4">
                     <div class="flex flex-col gap-y-0.5">
                         <span class="text-xs text-gray-400 pl-0.5">@lang('good')</span>
                         <span class="py-2 bg-gray-300 px-9 rounded-xl"></span>
@@ -73,7 +73,7 @@
                             d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
                             clip-rule="evenodd" />
                     </svg>
-                    <span class="font-medium">Lisboa, Portugal</span>
+                    <span class="font-medium" x-text="location?.region + ', ' + location?.country"></span>
                 </div>
             </div>
 
@@ -159,9 +159,9 @@
                                     d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
                                     clip-rule="evenodd" />
                             </svg>
-                            <span class="font-medium">Lisboa</span>
+                            <span class="font-medium" x-text="location?.region"></span>
                         </div>
-                        <span class="lg:text-[75px] text-[50px] font-medium">25 ° C</span>
+                        <span class="lg:text-[75px] text-[50px] font-medium" x-text="(Math.round(weatherData?.feelslike_c) ?? 0) + ' ° C'"></span>
                     </div>
                 </div>
             </div>
@@ -175,11 +175,11 @@
                 <div class="inline-flex justify-between lg:px-6">
                     <div class="flex flex-col">
                         <span class="text-lg font-medium text-gray-900">@lang('sunrise')</span>
-                        <span class="text-gray-500">6:30</span>
+                        <span class="text-gray-500" x-text="astroData?.sunrise"></span>
                     </div>
                     <div class="flex flex-col">
                         <span class="text-lg font-medium text-gray-900">@lang('sunset')</span>
-                        <span class="text-gray-500">20:55</span>
+                        <span class="text-gray-500" x-text="astroData?.sunset">20:55</span>
                     </div>
                 </div>
             </div>
@@ -188,27 +188,15 @@
 
         {{-- 3 ROW --}}
         <div class="grid grid-cols-3 py-2 mx-auto lg:px-4 lg:w-full lg:col-span-2 gap-x-2 lg:gap-x-6">
-            <div class="px-8 py-24 overflow-hidden bg-white shadow-lg lg:py-8 rounded-2xl">
-                <div class="flex flex-col justify-center gap-y-1">
-                    <span class="text-xl font-medium text-center text-gray-900">24 ° C</span>
-                    <img src="{{asset('weather_icon_pack/sun.gif')}}" alt="">
-                    <span class="text-xl font-medium text-center text-gray-900">15:00h</span>
+            <template x-for="weatherData in nextThreeHours">
+                <div class="px-8 py-24 overflow-hidden bg-white shadow-lg lg:py-8 rounded-2xl">
+                    <div class="flex flex-col justify-center gap-y-1">
+                        <span class="text-xl font-medium text-center text-gray-900" x-text="weatherData.temp_c + ' ° C'"></span>
+                        <img :src="weatherData.condition.icon" :alt="weatherData.condition.text">
+                        <span class="text-xl font-medium text-center text-gray-900" x-text="weatherData.hour + (locale === 'pt' ? ':00h' : ':00pm') "></span>
+                    </div>
                 </div>
-            </div>
-            <div class="px-8 py-24 overflow-hidden bg-white shadow-lg lg:py-8 rounded-2xl">
-                <div class="flex flex-col justify-center gap-y-1">
-                    <span class="text-xl font-medium text-center text-gray-900">24 ° C</span>
-                    <img src="{{asset('weather_icon_pack/sun.gif')}}" alt="">
-                    <span class="text-xl font-medium text-center text-gray-900">16:00h</span>
-                </div>
-            </div>
-            <div class="px-8 py-24 overflow-hidden bg-white shadow-lg lg:py-8 rounded-2xl">
-                <div class="flex flex-col justify-center gap-y-1">
-                    <span class="text-xl font-medium text-center text-gray-900">24 ° C</span>
-                    <img src="{{asset('weather_icon_pack/sun.gif')}}" alt="">
-                    <span class="text-xl font-medium text-center text-gray-900">17:00h</span>
-                </div>
-            </div>
+            </template>
         </div>
 
         {{-- Wind Card --}}
@@ -218,7 +206,7 @@
                 <div class="inline-flex justify-center lg:px-6">
                     <div class="flex flex-col text-center">
                         <span class="text-xl font-medium text-gray-900">@lang('wind')</span>
-                        <span class="text-lg text-gray-500">32 km/h</span>
+                        <span class="text-lg text-gray-500" x-text="weatherData?.wind_kph + ' km/h'"></span>
                     </div>
                 </div>
             </div>
@@ -241,20 +229,74 @@
     </div>
 </x-app-layout>
 <script>
+    let date = new Date();
+
     function data() {
         return {
+            date: date,
             clock: null,
             weekday: null,
+            weatherData: null,
+            location: null,
+            hour: null,
+            astroData: null,
+            nextThreeHours: [],
             init(){
-                this.weekday = new Date().toLocaleDateString(locale, {weekday: 'long'});
+                this.weekday = date.toLocaleDateString(locale, {weekday: 'long'});
 
                 this.startClock();
                 setInterval(() =>{
                     this.startClock();
                 }, 1000);
+                this.fetchData();
             },
             fetchData() {
+                // Weather data
+                axios.get(`http://api.weatherapi.com/v1/forecast.json?key=d2a0fd1aea8c4ff18d0133526230208&lang=${locale}&q=Lisbon&days=1&aqi=no&alerts=no`)
+                .then((response) => {
+                    console.log(response);
+                    this.weatherData = response?.data?.current;
+                    this.location = response?.data?.location;
+                    this.astroData = response?.data?.forecast?.forecastday[0]?.astro;
+                    // saveStorage('weather-data', response.data.data);
+                    // saveStorage('weather-location', response.data.data);
+                    this.processWeatherData();
+                })
+                .catch((error) => console.log(error.message));
 
+                // Weather data
+                // axios.get(`http://api.weatherapi.com/v1/current.json?key=d2a0fd1aea8c4ff18d0133526230208&q=Lisbon&lang=${locale}&hour=&aqi=no`)
+                // .then((response) => {
+                //     console.log(response);
+                //     this.weatherData = response.data.current;
+                //     this.location = response.data.location;
+                //     // saveStorage('weather-data', response.data.data);
+                //     // saveStorage('weather-location', response.data.data);
+                // })
+                // .catch((error) => console.log(error.message));
+
+            },
+            processWeatherData(){
+                this.hour = date.getHours();
+
+                if(this.hour){
+                    let h = this.hour;
+                    for (let index = 1; index < 4; index++) {
+                        let hourToSearch = h + index;
+                        axios.get(`http://api.weatherapi.com/v1/forecast.json?key=d2a0fd1aea8c4ff18d0133526230208&q=Lisbon?days=1&&hour=${hourToSearch}&lang=${locale}&aqi=no&alerts=no`)
+                        .then((response) => {
+                            // console.log(response);
+                            console.log(response.data.forecast.forecastday[0]);
+                            this.nextThreeHours.push({
+                                hour: new Date((response.data.forecast.forecastday[0].hour[0].time_epoch * 1000)).getHours(),
+                                temp_c: Math.round(response.data.forecast.forecastday[0].hour[0].feelslike_c),
+                                condition: response.data.forecast.forecastday[0].hour[0].condition
+                            });
+                            this.nextThreeHours.sort((a, b) => {return a.hour - b.hour});
+                        })
+                        .catch((error) => console.log(error.message));
+                    }
+                }
             },
             startClock() {
                 let hours = null;
@@ -264,6 +306,7 @@
                     hours = new Date().toLocaleTimeString(locale);
                 }
                 this.clock = hours;
+                console.log(this.nextThreeHours);
             },
         }
     }
