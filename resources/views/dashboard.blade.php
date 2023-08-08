@@ -5,36 +5,57 @@
         </h2>
     </x-slot> --}}
 
-    <div x-data="data()" class="grid grid-cols-1 py-8 lg:grid-cols-6 lg:gap-y-4 lg:px-8" x-cloak>
+    <div x-data="data()" class="grid grid-cols-1 py-8 lg:grid-cols-6 lg:gap-y-4 lg:px-8" >
         {{-- 1 ROW --}}
         {{-- Welcome card --}}
         <div class="py-2 mx-auto lg:col-span-2 lg:gap-3 lg:flex lg:w-full lg:flex-col lg:px-4">
             <div
-                class="p-6 overflow-hidden font-medium bg-white divide-black shadow-lg lg:inline-flex lg:divide-x-2 rounded-2xl lg:gap-6 lg:p-10">
+            class="p-6 overflow-hidden font-medium bg-white divide-black shadow-lg lg:inline-flex lg:divide-x-2 rounded-2xl lg:gap-6 lg:p-10">
                 <div class="hidden text-xl whitespace-nowrap lg:flex lg:flex-col">
                     <span x-text="clock"></span>
                     <span x-text="weekday" class="capitalize"></span>
                 </div>
-                <div class="flex flex-col px-4 lg:px-5 lg:align-middle">
+                <div class="flex flex-col w-full px-4 lg:px-5 lg:align-middle">
                     <span class="text-xl">@lang('welcome_back') <span>{{ Auth::user()->name }}</span></span>
                     <span class="pt-1 whitespace-nowrap">@lang('check_out_todays_weather_information')</span>
-                    <span class="pt-1 text-xs whitespace-nowrap">Powered by <a href="https://www.weatherapi.com/" title="Free Weather API">WeatherAPI.com</a></span>
+                    <span class="pt-1 text-xs whitespace-nowrap">@lang('powered_by') <a href="https://www.weatherapi.com/" title="Free Weather API">WeatherAPI.com</a></span>
                 </div>
             </div>
             {{-- Weather text information in large screens --}}
-            <div class="hidden p-5 overflow-hidden bg-white shadow-lg lg:block rounded-2xl">
-                <p class="font-medium text-gray-900">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <template x-if="hasAlerts">
+            <div class="hidden p-4 overflow-hidden align-middle bg-white shadow-lg lg:block rounded-2xl">
+                <marquee behavior="scroll" direction="left" scrollamount="10" class="font-medium text-gray-900 " x-text="alerts?.alert[0]?.desc"></marquee>
             </div>
+            </template>
+            <template x-if="!hasAlerts">
+            <div class="hidden p-4 overflow-hidden align-middle bg-white shadow-lg lg:block rounded-2xl">
+                <div class="inline-flex justify-between w-full p-1">
+                    <div class="inline-flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 my-auto">
+                            <path fill-rule="evenodd"
+                                d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="ml-2 text-lg font-medium text-gray-900" x-text="location?.region + ', ' + location?.country"></span>
+                    </div>
+                    <span class="inline-flex text-lg font-medium text-gray-900 gap-x-4">
+                        <span x-text="(Math.round(forecastData?.maxtemp_c)) + ' °C'"></span>
+                        <span x-text="(Math.round(forecastData?.mintemp_c)) + ' °C'"></span>
+                    </span>
+                </div>
+            </div>
+            </template>
         </div>
         {{-- END Welcome card --}}
 
         {{-- Weather text information in mobile screen --}}
+        <template x-if="hasAlerts">
         <div class="py-2 mx-auto lg:hidden sm:block lg:px-4">
             <div class="p-12 overflow-hidden bg-white shadow-lg lg:p-24 rounded-2xl">
-                <p class="text-sm font-medium text-gray-900">Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </p>
+                <marquee behavior="scroll" direction="left" class="font-medium text-gray-900" x-text="alerts?.alert[0]?.desc"></marquee>
             </div>
         </div>
+        </template>
         {{-- END Weather text information in mobile screen --}}
 
         {{-- Humidity Card --}}
@@ -187,12 +208,12 @@
         {{-- END Sunrise Info Card --}}
 
         {{-- 3 ROW --}}
-        <div class="grid grid-cols-3 py-2 mx-auto lg:px-4 lg:w-full lg:col-span-2 gap-x-2 lg:gap-x-6">
+        <div class="grid grid-cols-3 py-2 mx-auto lg:px-4 lg:w-full lg:col-span-2 gap-x-2 lg:gap-x-6" >
             <template x-for="weatherData in nextThreeHours">
                 <div class="px-8 py-24 overflow-hidden bg-white shadow-lg lg:py-8 rounded-2xl">
                     <div class="flex flex-col justify-center gap-y-1">
                         <span class="text-xl font-medium text-center text-gray-900" x-text="weatherData.temp_c + ' ° C'"></span>
-                        <img :src="weatherData.condition.icon" :alt="weatherData.condition.text">
+                        <img class="w-[110px] h-[110px] mx-auto" src="" :src="imagesFolder+'/'+weatherData?.condition" >
                         <span class="text-xl font-medium text-center text-gray-900" x-text="weatherData.hour + (locale === 'pt' ? ':00h' : ':00pm') "></span>
                     </div>
                 </div>
@@ -205,7 +226,10 @@
                 <img src="{{asset('weather_icon_pack/wind.gif')}}" class="mx-auto w-[155px] h-[155px]" alt="">
                 <div class="inline-flex justify-center lg:px-6">
                     <div class="flex flex-col text-center">
-                        <span class="text-xl font-medium text-gray-900">@lang('wind')</span>
+                        <div class="inline-flex gap-x-1">
+                            <span class="text-xl font-medium text-gray-900">@lang('wind')</span>
+                            <span class="my-auto text-sm font-medium text-gray-900" x-text="'('+ weatherData?.wind_dir +')'"></span>
+                        </div>
                         <span class="text-lg text-gray-500" x-text="weatherData?.wind_kph + ' km/h'"></span>
                     </div>
                 </div>
@@ -220,7 +244,7 @@
                 <div class="inline-flex justify-center lg:px-6">
                     <div class="flex flex-col text-center">
                         <span class="text-xl font-medium text-gray-900">@lang('uv_index')</span>
-                        <span class="text-lg text-gray-500">Low</span>
+                        <span class="text-lg text-gray-500" x-text="uvIndex"></span>
                     </div>
                 </div>
             </div>
@@ -241,23 +265,39 @@
             hour: null,
             astroData: null,
             nextThreeHours: [],
+            forecastData: null,
+            alerts: [],
+            imagesFolder: '{{ asset("weather_icon_pack/") }}',
+            hasAlerts: false,
+            uvIndex: null,
             init(){
+                console.log(locale);
+                this.getUserCurrentPosition();
                 this.weekday = date.toLocaleDateString(locale, {weekday: 'long'});
 
                 this.startClock();
                 setInterval(() =>{
                     this.startClock();
                 }, 1000);
-                this.fetchData();
+
+                if(navigator.onLine) {
+                    this.fetchData();
+                }
             },
             fetchData() {
                 // Weather data
-                axios.get(`http://api.weatherapi.com/v1/forecast.json?key=d2a0fd1aea8c4ff18d0133526230208&lang=${locale}&q=Lisbon&days=1&aqi=no&alerts=no`)
+                axios.get(`http://api.weatherapi.com/v1/forecast.json?key=d2a0fd1aea8c4ff18d0133526230208&lang=${locale}&q=Santarem%Portugal&days=1&aqi=no&alerts=yes`)
                 .then((response) => {
-                    console.log(response);
+                    console.log('Weather Forecast', response?.data);
                     this.weatherData = response?.data?.current;
                     this.location = response?.data?.location;
                     this.astroData = response?.data?.forecast?.forecastday[0]?.astro;
+                    this.forecastData = response?.data?.forecast?.forecastday[0]?.day;
+                    if(response?.data?.alerts?.alert?.length > 0) {
+                        this.alerts = response?.data?.alerts;
+                        this.hasAlerts = true;
+                    }
+                    console.log(this.alerts);
                     // saveStorage('weather-data', response.data.data);
                     // saveStorage('weather-location', response.data.data);
                     this.processWeatherData();
@@ -283,19 +323,37 @@
                     let h = this.hour;
                     for (let index = 1; index < 4; index++) {
                         let hourToSearch = h + index;
-                        axios.get(`http://api.weatherapi.com/v1/forecast.json?key=d2a0fd1aea8c4ff18d0133526230208&q=Lisbon?days=1&&hour=${hourToSearch}&lang=${locale}&aqi=no&alerts=no`)
+                        axios.get(`http://api.weatherapi.com/v1/forecast.json?key=d2a0fd1aea8c4ff18d0133526230208&q=Santarem%Portugal?days=1&&hour=${hourToSearch}&lang=${locale}&aqi=no&alerts=no`)
                         .then((response) => {
+                            let imgCondition = null;
                             // console.log(response);
-                            console.log(response.data.forecast.forecastday[0]);
+                            console.log('hours', response.data.forecast.forecastday[0]);
+                            switch (response?.data?.forecast?.forecastday[0]?.hour[0]?.condition?.code) {
+                                case 1000:
+                                imgCondition ='sun.gif';
+                                break;
+                            };
                             this.nextThreeHours.push({
-                                hour: new Date((response.data.forecast.forecastday[0].hour[0].time_epoch * 1000)).getHours(),
-                                temp_c: Math.round(response.data.forecast.forecastday[0].hour[0].feelslike_c),
-                                condition: response.data.forecast.forecastday[0].hour[0].condition
+                                hour: new Date((response?.data?.forecast?.forecastday[0]?.hour[0]?.time_epoch * 1000)).getHours(),
+                                temp_c: Math.round(response?.data?.forecast?.forecastday[0]?.hour[0]?.feelslike_c),
+                                condition: imgCondition,
                             });
                             this.nextThreeHours.sort((a, b) => {return a.hour - b.hour});
                         })
                         .catch((error) => console.log(error.message));
                     }
+                }
+
+                switch(this.weatherData.uv) {
+                    case (0 <= this.weatherData.uv <= 3):
+                        this.uvIndex = Lang.get('strings.low');
+                        break;
+                    case (3 < this.weatherData.uv <= 7):
+                        this.uvIndex = Lang.get('strings.moderate');
+                        break;
+                    case (7 < this.weatherData.uv <= 10):
+                        this.uvIndex = Lang.get('strings.extreme');
+                        break;
                 }
             },
             startClock() {
@@ -306,7 +364,17 @@
                     hours = new Date().toLocaleTimeString(locale);
                 }
                 this.clock = hours;
-                console.log(this.nextThreeHours);
+            },
+            getUserCurrentPosition() {
+                if(navigator.onLine && "geolocation" in navigator) {
+                    console.log('Geolocation is available');
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        console.log(position);
+                    });
+                } else {
+                    console.log('Geolocation is not supported by this browser.');
+                }
+
             },
         }
     }

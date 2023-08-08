@@ -804,6 +804,9 @@ select {
 .h-8 {
   height: 2rem;
 }
+.h-\[110px\] {
+  height: 110px;
+}
 .h-\[155px\] {
   height: 155px;
 }
@@ -833,6 +836,9 @@ select {
 }
 .w-8 {
   width: 2rem;
+}
+.w-\[110px\] {
+  width: 110px;
 }
 .w-\[155px\] {
   width: 155px;
@@ -1074,6 +1080,9 @@ select {
 .fill-current {
   fill: currentColor;
 }
+.p-1 {
+  padding: 0.25rem;
+}
 .p-12 {
   padding: 3rem;
 }
@@ -1083,8 +1092,8 @@ select {
 .p-24 {
   padding: 6rem;
 }
-.p-5 {
-  padding: 1.25rem;
+.p-4 {
+  padding: 1rem;
 }
 .p-6 {
   padding: 1.5rem;
