@@ -13,5 +13,8 @@
     "sunset": "Pôr do sol",
     "check_out_todays_weather_information": "Consulte a informação do clima para hoje",
     "log_out": "Sair",
-    "dashboard": "Página inicial"
+    "dashboard": "Página inicial",
+    "powered_by": "Fornecido por",
+    "moderate": "Moderado",
+    "extreme": "Extremo"
 }

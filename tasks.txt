@@ -2,4 +2,6 @@
 - Criar pagina de configuração de utilizador
 - Colocar dados dinamicos
 - Tornar site responsive
+- Dynamic images with icon code (Weather API)
+- Colocar duas medidas de temperatura (F and Cº)
 
