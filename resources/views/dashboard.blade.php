@@ -271,6 +271,45 @@
             hasAlerts: false,
             uvIndex: null,
             init(){
+
+                // load data from localStorage
+                if (typeof Storage !== 'undefined') {
+                    //Weather data
+                    localForage.getItem('weather-data')
+                    .then((value) => {
+                        this.weatherData = value;
+                    })
+                    .catch((err) => { console.log(err) });
+
+                    //Location data
+                    localForage.getItem('weather-location')
+                    .then((value) => {
+                        this.location = value;
+                    })
+                    .catch((err) => { console.log(err) });
+
+                    //Astro data
+                    localForage.getItem('weather-astro-data')
+                    .then((value) => {
+                        this.astroData = value;
+                    })
+                    .catch((err) => { console.log(err) });
+
+                    //Forecast data
+                    localForage.getItem('weather-forecast-data')
+                    .then((value) => {
+                        this.forecastData = value;
+                    })
+                    .catch((err) => { console.log(err) });
+
+                    //Alerts
+                    localForage.getItem('weather-alerts')
+                    .then((value) => {
+                        this.alerts = value;
+                    })
+                    .catch((err) => { console.log(err) });
+                }
+
                 console.log(locale);
                 this.getUserCurrentPosition();
                 this.weekday = date.toLocaleDateString(locale, {weekday: 'long'});
@@ -288,7 +327,7 @@
                 // Weather data
                 axios.get(`http://api.weatherapi.com/v1/forecast.json?key=d2a0fd1aea8c4ff18d0133526230208&lang=${locale}&q=Santarem%Portugal&days=1&aqi=no&alerts=yes`)
                 .then((response) => {
-                    console.log('Weather Forecast', response?.data);
+                    // console.log('Weather Forecast', response?.data);
                     this.weatherData = response?.data?.current;
                     this.location = response?.data?.location;
                     this.astroData = response?.data?.forecast?.forecastday[0]?.astro;
@@ -296,10 +335,13 @@
                     if(response?.data?.alerts?.alert?.length > 0) {
                         this.alerts = response?.data?.alerts;
                         this.hasAlerts = true;
+                        saveStorage('weather-alerts', response?.data?.alerts);
                     }
-                    console.log(this.alerts);
-                    // saveStorage('weather-data', response.data.data);
-                    // saveStorage('weather-location', response.data.data);
+
+                    saveStorage('weather-data', response?.data?.current);
+                    saveStorage('weather-location', response?.data?.location);
+                    saveStorage('weather-astro-data', response?.data?.forecast.forecastday[0]?.astro);
+                    saveStorage('weather-forecast-data', response?.data?.forecast?.forecastday[0]?.day);
                     this.processWeatherData();
                 })
                 .catch((error) => console.log(error.message));
@@ -323,7 +365,7 @@
                     let h = this.hour;
                     for (let index = 1; index < 4; index++) {
                         let hourToSearch = h + index;
-                        axios.get(`http://api.weatherapi.com/v1/forecast.json?key=d2a0fd1aea8c4ff18d0133526230208&q=Santarem%Portugal?days=1&&hour=${hourToSearch}&lang=${locale}&aqi=no&alerts=no`)
+                        axios.get(`http://api.weatherapi.com/v1/forecast.json?key=d2a0fd1aea8c4ff18d0133526230208&lang=${locale}&q=Santarem%Portugal?days=1&&hour=${hourToSearch}&aqi=no&alerts=no`)
                         .then((response) => {
                             let imgCondition = null;
                             // console.log(response);
@@ -331,6 +373,15 @@
                             switch (response?.data?.forecast?.forecastday[0]?.hour[0]?.condition?.code) {
                                 case 1000:
                                 imgCondition ='sun.gif';
+                                break;
+                                case 1003:
+                                imgCondition ='cloudy.gif';
+                                break;
+                                case 1006:
+                                imgCondition ='clouds.gif';
+                                break;
+                                case 1009:
+                                imgCondition ='clouds.gif';
                                 break;
                             };
                             this.nextThreeHours.push({
@@ -343,18 +394,20 @@
                         .catch((error) => console.log(error.message));
                     }
                 }
-
-                switch(this.weatherData.uv) {
-                    case (0 <= this.weatherData.uv <= 3):
+                console.log('uv', this.weatherData.uv);
+                    if(0 <= this.weatherData.uv && this.weatherData.uv <= 3){
+                        console.log('entrei 0-3');
                         this.uvIndex = Lang.get('strings.low');
-                        break;
-                    case (3 < this.weatherData.uv <= 7):
+                    }
+                    else if (3 < this.weatherData.uv && this.weatherData.uv <= 7){
+                        console.log('entrei 3-7');
                         this.uvIndex = Lang.get('strings.moderate');
-                        break;
-                    case (7 < this.weatherData.uv <= 10):
+                    }
+                    else if (7 < this.weatherData.uv && this.weatherData.uv <= 10){
+                        console.log('entrei 7-10');
                         this.uvIndex = Lang.get('strings.extreme');
-                        break;
-                }
+                    }
+                console.log(this.uvIndex);
             },
             startClock() {
                 let hours = null;
