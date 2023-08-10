@@ -40,4 +40,5 @@
 </html>
 <script>
     let locale = "{{ app()->getLocale() ?? 'en' }}";
+    let key = "{{ env('API_KEY') }}";
 </script>
