@@ -64,20 +64,20 @@
                 <h1 class="pt-4 pl-6 font-medium">@lang('humidity')</h1>
                 <div class="flex flex-col gap-0">
                     <span class="-mt-3 text-[75px] text-center" x-text="(weatherData?.humidity ?? 0) + ' %'  "></span>
-                    <span class="-mt-5 -ml-20 text-center">Normal</span>
+                    <span class="-mt-5 -ml-20 text-center" x-text="humidityDescription"></span>
                 </div>
                 <div class="inline-flex justify-center w-full p-7 gap-x-4">
                     <div class="flex flex-col gap-y-0.5">
-                        <span class="text-xs text-gray-400 pl-0.5">@lang('good')</span>
-                        <span class="py-2 bg-gray-300 px-9 rounded-xl"></span>
+                        <span class="text-xs text-gray-400 pl-0.5">@lang('low')</span>
+                        <span :class="weatherData?.humidity > 0 || weatherData?.humidity <= 25 ? 'bg-blue-400' :  'bg-gray-300'" class="py-2 px-9 rounded-xl"></span>
                     </div>
                     <div class="flex flex-col gap-y-0.5">
                         <span class="text-xs text-gray-400 pl-0.5">@lang('normal')</span>
-                        <span class="py-2 bg-gray-300 px-9 rounded-xl"></span>
+                        <span :class="weatherData?.humidity > 25 || weatherData?.humidity <= 75 ? 'bg-blue-400' :  'bg-gray-300'" class="py-2 bg-gray-300 px-9 rounded-xl"></span>
                     </div>
                     <div class="flex flex-col gap-y-0.5">
-                        <span class="text-xs text-gray-400 pl-0.5">@lang('bad')</span>
-                        <span class="py-2 bg-gray-300 px-9 rounded-xl"></span>
+                        <span class="text-xs text-gray-400 pl-0.5">@lang('high')</span>
+                        <span :class="weatherData?.humidity > 75 || weatherData?.humidity <= 100 ? 'bg-blue-400' :  'bg-gray-300'" class="py-2 bg-gray-300 px-9 rounded-xl"></span>
                     </div>
                 </div>
             </div>
@@ -185,11 +185,11 @@
                 <div class="inline-flex justify-between lg:px-6">
                     <div class="flex flex-col">
                         <span class="text-lg font-medium text-gray-900">@lang('sunrise')</span>
-                        <span class="text-gray-500" x-text="astroData?.sunrise"></span>
+                        <span class="text-gray-500 " x-text="sunrise"></span>
                     </div>
                     <div class="flex flex-col">
                         <span class="text-lg font-medium text-gray-900">@lang('sunset')</span>
-                        <span class="text-gray-500" x-text="astroData?.sunset">20:55</span>
+                        <span class="text-right text-gray-500" x-text="sunset"></span>
                     </div>
                 </div>
             </div>
@@ -253,6 +253,8 @@
             weatherWeekData: [],
             location: null,
             hour: null,
+            sunset: null,
+            sunrise: null,
             astroData: null,
             nextThreeHours: [],
             forecastData: null,
@@ -260,6 +262,7 @@
             imagesFolder: '{{ asset("weather_icon_pack/") }}',
             hasAlerts: false,
             uvIndex: null,
+            humidityDescription: Lang.get('strings.unknown_humidity'),
             init(){
 
                 // load data from localStorage
@@ -356,6 +359,14 @@
             processWeatherData(){
                 this.hour = date.getHours();
 
+                if(locale === 'pt') {
+                    this.sunrise = convertFrom12To24Format(this.astroData.sunrise);
+                    this.sunset = convertFrom12To24Format(this.astroData.sunset);
+                } else {
+                    this.sunset = this.astroData.sunset;
+                    this.sunrise = this.astroData.sunrise;
+                }
+
                 if(this.hour){
                     let h = this.hour;
                     for (let index = 1; index < 4; index++) {
@@ -389,20 +400,31 @@
                         .catch((error) => console.log(error.message));
                     }
                 }
-                console.log('uv', this.weatherData.uv);
-                    if(0 <= this.weatherData.uv && this.weatherData.uv <= 3){
-                        console.log('entrei 0-3');
-                        this.uvIndex = Lang.get('strings.low');
-                    }
-                    else if (3 < this.weatherData.uv && this.weatherData.uv <= 7){
-                        console.log('entrei 3-7');
-                        this.uvIndex = Lang.get('strings.moderate');
-                    }
-                    else if (7 < this.weatherData.uv && this.weatherData.uv <= 10){
-                        console.log('entrei 7-10');
-                        this.uvIndex = Lang.get('strings.extreme');
-                    }
-                console.log(this.uvIndex);
+
+                //UV index
+                if(0 <= this.weatherData.uv && this.weatherData.uv <= 3){
+                    console.log('entrei 0-3');
+                    this.uvIndex = Lang.get('strings.low');
+                }
+                else if (3 < this.weatherData.uv && this.weatherData.uv <= 7){
+                    console.log('entrei 3-7');
+                    this.uvIndex = Lang.get('strings.moderate');
+                }
+                else if (7 < this.weatherData.uv && this.weatherData.uv <= 10){
+                    console.log('entrei 7-10');
+                    this.uvIndex = Lang.get('strings.extreme');
+                }
+
+                //Humidity
+                if(0 <= this.weatherData.humidity && this.weatherData.humidity <= 25){
+                    this.humidityDescription = Lang.get('strings.low');
+                }
+                else if (25 < this.weatherData.humidity && this.weatherData.humidity <= 75){
+                    this.humidityDescription = Lang.get('strings.normal');
+                }
+                else if (75 < this.weatherData.humidity && this.weatherData.humidity <= 100){
+                    this.humidityDescription = Lang.get('strings.high');
+                }
             },
             startClock() {
                 let hours = null;

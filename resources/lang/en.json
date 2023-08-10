@@ -17,5 +17,8 @@
     "powered_by": "Powered by",
     "moderate": "Moderate",
     "extreme": "Extreme",
-    "today": "Today"
+    "today": "Today",
+    "high": "High",
+    "low": "Low",
+    "unknown_humidity": "Unknown humidity level"
 }

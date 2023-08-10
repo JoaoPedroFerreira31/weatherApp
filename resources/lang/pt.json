@@ -17,5 +17,8 @@
     "powered_by": "Fornecido por",
     "moderate": "Moderado",
     "extreme": "Extremo",
-    "today": "Hoje"
+    "today": "Hoje",
+    "high": "Alta",
+    "low": "Baixa",
+    "unknown_humidity": "Humidade desconhecida"
 }
