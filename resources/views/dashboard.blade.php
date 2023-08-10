@@ -113,31 +113,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="text-lg bg-white dark:bg-gray-800">
-                        <th
-                            class="px-4 py-2 font-medium text-gray-500 whitespace-nowrap dark:text-white">
-                            Yesterday
-                        </th>
-                        <td class="px-2 py-2 text-center">
-                            30°C
-                        </td>
-                        <td class="px-2 py-2 text-center">
-                            22°C
-                        </td>
-                    </tr>
-                    <tr class="text-lg font-semibold text-gray-900 bg-white dark:bg-gray-800">
+                    <template x-for="record in weatherWeekData" :key="record.date">
+                    <tr class="text-lg text-gray-900 bg-white dark:bg-gray-800">
                         <th scope="row"
-                            class="px-4 py-2 whitespace-nowrap dark:text-white">
-                            Today
+                            class="px-4 py-2 whitespace-nowrap dark:text-white" :class="formatDate(date) === record.date ? 'font-semibold' : 'font-medium'" x-text="formatDate(date) === record.date ? Lang.get('strings.today') : record.date">
                         </th>
-                        <td class="px-2 py-2 text-center">
-                            26°C
+                        <td class="px-2 py-2 text-center" :class="formatDate(date) === record.date ? 'font-semibold' : 'font-medium'" x-text="Math.round(record?.day?.maxtemp_c) + ' °C'">
+
                         </td>
-                        <td class="px-2 py-2 text-center">
-                            17°C
+                        <td class="px-2 py-2 text-center" :class="formatDate(date) === record.date ? 'font-semibold' : 'font-medium'" x-text="Math.round(record?.day?.mintemp_c) + ' °C'">
+
                         </td>
                     </tr>
-                    <tr class="text-lg text-gray-500 dark:text-white">
+                    </template>
+                    {{-- <tr class="text-lg text-gray-500 dark:text-white">
                         <th scope="row" class="px-4 py-2 font-medium whitespace-nowrap dark:text-white">Tuesday</th>
                         <td class="px-2 py-3 text-center">25°C</td>
                         <td class="px-2 py-3 text-center">16°C</td>
@@ -161,7 +150,7 @@
                         <th scope="row" class="px-4 py-2 font-medium whitespace-nowrap dark:text-white">Saturday</th>
                         <td class="px-2 py-3 text-center">28°C</td>
                         <td class="px-2 py-3 text-center">19°C</td>
-                    </tr>
+                    </tr> --}}
                 </tbody>
             </table>
         </div>
@@ -261,6 +250,7 @@
             clock: null,
             weekday: null,
             weatherData: null,
+            weatherWeekData: [],
             location: null,
             hour: null,
             astroData: null,
@@ -278,6 +268,13 @@
                     localForage.getItem('weather-data')
                     .then((value) => {
                         this.weatherData = value;
+                    })
+                    .catch((err) => { console.log(err) });
+
+                    //Weather Week Data
+                    localForage.getItem('weather-week-data')
+                    .then((value) => {
+                        this.weatherWeekData = value;
                     })
                     .catch((err) => { console.log(err) });
 
@@ -325,7 +322,7 @@
             },
             fetchData() {
                 // Weather data
-                axios.get(`http://api.weatherapi.com/v1/forecast.json?key=d2a0fd1aea8c4ff18d0133526230208&lang=${locale}&q=Santarem%Portugal&days=1&aqi=no&alerts=yes`)
+                axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&lang=${locale}&q=Santarem%Portugal&days=1&aqi=no&alerts=yes`)
                 .then((response) => {
                     // console.log('Weather Forecast', response?.data);
                     this.weatherData = response?.data?.current;
@@ -346,16 +343,14 @@
                 })
                 .catch((error) => console.log(error.message));
 
-                // Weather data
-                // axios.get(`http://api.weatherapi.com/v1/current.json?key=d2a0fd1aea8c4ff18d0133526230208&q=Lisbon&lang=${locale}&hour=&aqi=no`)
-                // .then((response) => {
-                //     console.log(response);
-                //     this.weatherData = response.data.current;
-                //     this.location = response.data.location;
-                //     // saveStorage('weather-data', response.data.data);
-                //     // saveStorage('weather-location', response.data.data);
-                // })
-                // .catch((error) => console.log(error.message));
+                //Weather Week data
+                axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&q=Santarem%Portugal&days=7&lang=${locale}&aqi=no`)
+                .then((response) => {
+                    this.weatherWeekData = response.data.forecast.forecastday;
+                    console.log(this.weatherWeekData);
+                    saveStorage('weather-week-data', response.data.forecast.forecastday);
+                })
+                .catch((error) => console.log(error.message));
 
             },
             processWeatherData(){
@@ -365,7 +360,7 @@
                     let h = this.hour;
                     for (let index = 1; index < 4; index++) {
                         let hourToSearch = h + index;
-                        axios.get(`http://api.weatherapi.com/v1/forecast.json?key=d2a0fd1aea8c4ff18d0133526230208&lang=${locale}&q=Santarem%Portugal?days=1&&hour=${hourToSearch}&aqi=no&alerts=no`)
+                        axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&lang=${locale}&q=Santarem%Portugal?days=1&&hour=${hourToSearch}&aqi=no&alerts=no`)
                         .then((response) => {
                             let imgCondition = null;
                             // console.log(response);
