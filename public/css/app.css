@@ -804,6 +804,9 @@ select {
 .h-8 {
   height: 2rem;
 }
+.h-\[110px\] {
+  height: 110px;
+}
 .h-\[155px\] {
   height: 155px;
 }
@@ -833,6 +836,9 @@ select {
 }
 .w-8 {
   width: 2rem;
+}
+.w-\[110px\] {
+  width: 110px;
 }
 .w-\[155px\] {
   width: 155px;
@@ -1051,6 +1057,10 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(227 244 254 / var(--tw-bg-opacity));
 }
+.bg-blue-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(96 165 250 / var(--tw-bg-opacity));
+}
 .bg-gray-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
@@ -1074,6 +1084,9 @@ select {
 .fill-current {
   fill: currentColor;
 }
+.p-1 {
+  padding: 0.25rem;
+}
 .p-12 {
   padding: 3rem;
 }
@@ -1083,11 +1096,14 @@ select {
 .p-24 {
   padding: 6rem;
 }
-.p-5 {
-  padding: 1.25rem;
+.p-4 {
+  padding: 1rem;
 }
 .p-6 {
   padding: 1.5rem;
+}
+.p-7 {
+  padding: 1.75rem;
 }
 .px-1 {
   padding-left: 0.25rem;
@@ -1193,6 +1209,9 @@ select {
 .text-center {
   text-align: center;
 }
+.text-right {
+  text-align: right;
+}
 .align-middle {
   vertical-align: middle;
 }
@@ -1240,6 +1259,9 @@ select {
 }
 .uppercase {
   text-transform: uppercase;
+}
+.capitalize {
+  text-transform: capitalize;
 }
 .leading-5 {
   line-height: 1.25rem;

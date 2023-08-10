@@ -20,6 +20,8 @@
         "tailwindcss": "^3.0.18"
     },
     "dependencies": {
-        "laravel-mix-serve": "^2.2.2"
+        "laravel-mix-serve": "^2.2.2",
+        "localforage": "^1.10.0",
+        "moment": "^2.29.4"
     }
 }

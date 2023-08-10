@@ -13,5 +13,12 @@
     "sunset": "Sunset",
     "check_out_todays_weather_information": "Check out weather today's information",
     "log_out": "Log Out",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "powered_by": "Powered by",
+    "moderate": "Moderate",
+    "extreme": "Extreme",
+    "today": "Today",
+    "high": "High",
+    "low": "Low",
+    "unknown_humidity": "Unknown humidity level"
 }
