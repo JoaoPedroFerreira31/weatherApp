@@ -20,5 +20,6 @@
     "today": "Today",
     "high": "High",
     "low": "Low",
-    "unknown_humidity": "Unknown humidity level"
+    "unknown_humidity": "Unknown humidity level",
+    "settings": "Settings"
 }

@@ -20,5 +20,6 @@
     "today": "Hoje",
     "high": "Alta",
     "low": "Baixa",
-    "unknown_humidity": "Humidade desconhecida"
+    "unknown_humidity": "Humidade desconhecida",
+    "settings": "Definições"
 }

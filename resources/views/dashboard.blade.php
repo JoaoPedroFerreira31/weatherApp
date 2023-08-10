@@ -126,31 +126,6 @@
                         </td>
                     </tr>
                     </template>
-                    {{-- <tr class="text-lg text-gray-500 dark:text-white">
-                        <th scope="row" class="px-4 py-2 font-medium whitespace-nowrap dark:text-white">Tuesday</th>
-                        <td class="px-2 py-3 text-center">25°C</td>
-                        <td class="px-2 py-3 text-center">16°C</td>
-                    </tr>
-                    <tr class="text-lg text-gray-500 dark:text-white">
-                        <th scope="row" class="px-4 py-2 font-medium whitespace-nowrap dark:text-white">Wednesday</th>
-                        <td class="px-2 py-3 text-center">32°C</td>
-                        <td class="px-2 py-3 text-center">18°C</td>
-                    </tr>
-                    <tr class="text-lg text-gray-500 dark:text-white">
-                        <th scope="row" class="px-4 py-2 font-medium whitespace-nowrap dark:text-white">Thursday</th>
-                        <td class="px-2 py-3 text-center">29°C</td>
-                        <td class="px-2 py-3 text-center">18°C</td>
-                    </tr>
-                    <tr class="text-lg text-gray-500 dark:text-white">
-                        <th scope="row" class="px-4 py-2 font-medium whitespace-nowrap dark:text-white">Friday</th>
-                        <td class="px-2 py-3 text-center">30°C</td>
-                        <td class="px-2 py-3 text-center">19°C</td>
-                    </tr>
-                    <tr class="text-lg text-gray-500 dark:text-white">
-                        <th scope="row" class="px-4 py-2 font-medium whitespace-nowrap dark:text-white">Saturday</th>
-                        <td class="px-2 py-3 text-center">28°C</td>
-                        <td class="px-2 py-3 text-center">19°C</td>
-                    </tr> --}}
                 </tbody>
             </table>
         </div>
@@ -311,7 +286,6 @@
                 }
 
                 console.log(locale);
-                this.getUserCurrentPosition();
                 this.weekday = date.toLocaleDateString(locale, {weekday: 'long'});
 
                 this.startClock();
@@ -350,7 +324,6 @@
                 axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&q=Santarem%Portugal&days=7&lang=${locale}&aqi=no`)
                 .then((response) => {
                     this.weatherWeekData = response.data.forecast.forecastday;
-                    console.log(this.weatherWeekData);
                     saveStorage('weather-week-data', response.data.forecast.forecastday);
                 })
                 .catch((error) => console.log(error.message));
@@ -359,6 +332,7 @@
             processWeatherData(){
                 this.hour = date.getHours();
 
+                /* Process sunset/sunrise time format*/
                 if(locale === 'pt') {
                     this.sunrise = convertFrom12To24Format(this.astroData.sunrise);
                     this.sunset = convertFrom12To24Format(this.astroData.sunset);
@@ -367,6 +341,7 @@
                     this.sunrise = this.astroData.sunrise;
                 }
 
+                /* Get the forecast for the next three hours */
                 if(this.hour){
                     let h = this.hour;
                     for (let index = 1; index < 4; index++) {
@@ -401,21 +376,18 @@
                     }
                 }
 
-                //UV index
+                //UV index (Description)
                 if(0 <= this.weatherData.uv && this.weatherData.uv <= 3){
-                    console.log('entrei 0-3');
                     this.uvIndex = Lang.get('strings.low');
                 }
                 else if (3 < this.weatherData.uv && this.weatherData.uv <= 7){
-                    console.log('entrei 3-7');
                     this.uvIndex = Lang.get('strings.moderate');
                 }
                 else if (7 < this.weatherData.uv && this.weatherData.uv <= 10){
-                    console.log('entrei 7-10');
                     this.uvIndex = Lang.get('strings.extreme');
                 }
 
-                //Humidity
+                //Humidity (Description)
                 if(0 <= this.weatherData.humidity && this.weatherData.humidity <= 25){
                     this.humidityDescription = Lang.get('strings.low');
                 }
@@ -434,17 +406,6 @@
                     hours = new Date().toLocaleTimeString(locale);
                 }
                 this.clock = hours;
-            },
-            getUserCurrentPosition() {
-                if(navigator.onLine && "geolocation" in navigator) {
-                    console.log('Geolocation is available');
-                    navigator.geolocation.getCurrentPosition((position) => {
-                        console.log(position);
-                    });
-                } else {
-                    console.log('Geolocation is not supported by this browser.');
-                }
-
             },
         }
     }
