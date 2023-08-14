@@ -66,20 +66,30 @@
                     <span class="-mt-3 text-[75px] text-center" x-text="(weatherData?.humidity ?? 0) + ' %'  "></span>
                     <span class="-mt-5 -ml-20 text-center" x-text="humidityDescription"></span>
                 </div>
-                <div class="inline-flex justify-center w-full p-7 gap-x-4">
+                <div class="flex flex-col p-5 mb-1 ">
+                    <div class="inline-flex justify-between">
+                        <span class="text-lg font-medium text-gray-900 dark:text-white" x-text="humidityDescription"></span>
+                        <span class="font-medium text-gray-900 dark:text-white" x-text="(weatherData?.humidity ?? 0) + ' %'"></span>
+                    </div>
+                    <div class="w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700">
+                        <div class="h-4 bg-blue-400 rounded-full" :style="`width: ${weatherData?.humidity}%;`"></div>
+                    </div>
+                </div>
+
+                {{-- <div class="inline-flex justify-center w-full p-7 gap-x-4">
                     <div class="flex flex-col gap-y-0.5">
                         <span class="text-xs text-gray-400 pl-0.5">@lang('low')</span>
-                        <span :class="weatherData?.humidity > 0 || weatherData?.humidity <= 25 ? 'bg-blue-400' :  'bg-gray-300'" class="py-2 px-9 rounded-xl"></span>
+                        <span :class="weatherData?.humidity > 0 || weatherData?.humidity < 25 ? 'bg-blue-400' :  'bg-gray-300'" class="py-2 px-9 rounded-xl"></span>
                     </div>
                     <div class="flex flex-col gap-y-0.5">
                         <span class="text-xs text-gray-400 pl-0.5">@lang('normal')</span>
-                        <span :class="weatherData?.humidity > 25 || weatherData?.humidity <= 75 ? 'bg-blue-400' :  'bg-gray-300'" class="py-2 bg-gray-300 px-9 rounded-xl"></span>
+                        <span :class="weatherData?.humidity > 25 || weatherData?.humidity < 75 ? 'bg-blue-400' :  'bg-gray-300'" class="py-2 px-9 rounded-xl"></span>
                     </div>
                     <div class="flex flex-col gap-y-0.5">
                         <span class="text-xs text-gray-400 pl-0.5">@lang('high')</span>
-                        <span :class="weatherData?.humidity > 75 || weatherData?.humidity <= 100 ? 'bg-blue-400' :  'bg-gray-300'" class="py-2 bg-gray-300 px-9 rounded-xl"></span>
+                        <span :class="weatherData?.humidity > 75 || weatherData?.humidity < 100 ? 'bg-blue-400' :  'bg-gray-300'" class="py-2 px-9 rounded-xl"></span>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
         {{-- END Humidity Card --}}
