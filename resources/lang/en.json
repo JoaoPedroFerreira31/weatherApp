@@ -21,5 +21,8 @@
     "high": "High",
     "low": "Low",
     "unknown_humidity": "Unknown humidity level",
-    "settings": "Settings"
+    "settings": "Settings",
+    "account_settings": "Account Settings",
+    "back_to_dashboard": "Back to Dashboard",
+    "manage_your_account_information_and_settings": "Manage your account information and settings"
 }

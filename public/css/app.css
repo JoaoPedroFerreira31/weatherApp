@@ -944,6 +944,9 @@ select {
 .gap-0 {
   gap: 0px;
 }
+.gap-2 {
+  gap: 0.5rem;
+}
 .gap-x-1 {
   -moz-column-gap: 0.25rem;
        column-gap: 0.25rem;
@@ -1179,6 +1182,9 @@ select {
 }
 .pb-3 {
   padding-bottom: 0.75rem;
+}
+.pb-6 {
+  padding-bottom: 1.5rem;
 }
 .pl-0 {
   padding-left: 0px;

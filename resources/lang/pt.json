@@ -21,5 +21,8 @@
     "high": "Alta",
     "low": "Baixa",
     "unknown_humidity": "Humidade desconhecida",
-    "settings": "Definições"
+    "settings": "Definições",
+    "account_settings": "Definições de Conta",
+    "back_to_dashboard": "Voltar para a página inicial",
+    "manage_your_account_information_and_settings": "Gerir as informações e definições da sua conta"
 }
