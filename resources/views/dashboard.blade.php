@@ -68,32 +68,18 @@
                 </div>
                 <div class="flex flex-col p-5 mb-1 ">
                     <div class="inline-flex justify-between">
-                        <span class="text-lg font-medium text-gray-900 dark:text-white" x-text="humidityDescription"></span>
-                        <span class="font-medium text-gray-900 dark:text-white" x-text="(weatherData?.humidity ?? 0) + ' %'"></span>
+                        <span class="text-gray-900 dark:text-white" x-text="humidityDescription"></span>
+                        <span class="text-gray-900 dark:text-white" x-text="(weatherData?.humidity ?? 0) + ' %'"></span>
                     </div>
                     <div class="w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700">
                         <div class="h-4 bg-blue-400 rounded-full" :style="`width: ${weatherData?.humidity}%;`"></div>
                     </div>
                 </div>
-
-                {{-- <div class="inline-flex justify-center w-full p-7 gap-x-4">
-                    <div class="flex flex-col gap-y-0.5">
-                        <span class="text-xs text-gray-400 pl-0.5">@lang('low')</span>
-                        <span :class="weatherData?.humidity > 0 || weatherData?.humidity < 25 ? 'bg-blue-400' :  'bg-gray-300'" class="py-2 px-9 rounded-xl"></span>
-                    </div>
-                    <div class="flex flex-col gap-y-0.5">
-                        <span class="text-xs text-gray-400 pl-0.5">@lang('normal')</span>
-                        <span :class="weatherData?.humidity > 25 || weatherData?.humidity < 75 ? 'bg-blue-400' :  'bg-gray-300'" class="py-2 px-9 rounded-xl"></span>
-                    </div>
-                    <div class="flex flex-col gap-y-0.5">
-                        <span class="text-xs text-gray-400 pl-0.5">@lang('high')</span>
-                        <span :class="weatherData?.humidity > 75 || weatherData?.humidity < 100 ? 'bg-blue-400' :  'bg-gray-300'" class="py-2 px-9 rounded-xl"></span>
-                    </div>
-                </div> --}}
             </div>
         </div>
         {{-- END Humidity Card --}}
 
+        {{-- Forecast of the week card --}}
         <div
             class="flex flex-col px-12 py-6 mx-5 bg-white shadow-lg rounded-2xl lg:p-6 lg:mt-2 lg:col-span-2 lg:row-span-2">
             <div class="flex flex-col mb-3">
@@ -182,7 +168,7 @@
         {{-- END Sunrise Info Card --}}
 
         {{-- 3 ROW --}}
-        <div class="grid grid-cols-3 py-2 mx-auto lg:px-4 lg:w-full lg:col-span-2 gap-x-2 lg:gap-x-6" >
+        <div :class="pastTenPm ? 'lg:grid-col-1' : 'lg:grid-cols-3'" class="grid py-2 mx-auto grid-col-1 lg:px-4 lg:w-full lg:col-span-2 gap-x-2 lg:gap-x-6" >
             <template x-for="weatherData in nextThreeHours">
                 <div class="px-8 py-24 overflow-hidden bg-white shadow-lg lg:py-8 rounded-2xl">
                     <div class="flex flex-col justify-center gap-y-1">
@@ -247,6 +233,7 @@
             imagesFolder: '{{ asset("weather_icon_pack/") }}',
             hasAlerts: false,
             uvIndex: null,
+            pastTenPm: false,
             humidityDescription: Lang.get('strings.unknown_humidity'),
             init(){
 
@@ -354,12 +341,13 @@
                 /* Get the forecast for the next three hours */
                 if(this.hour){
                     let h = this.hour;
-                    for (let index = 1; index < 4; index++) {
+                    let loopNumber = !this.pastTenPm ? 4 : 2;
+
+                    for (let index = 1; index < loopNumber; index++) {
                         let hourToSearch = h + index;
                         axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&lang=${locale}&q=Santarem%Portugal?days=1&&hour=${hourToSearch}&aqi=no&alerts=no`)
                         .then((response) => {
                             let imgCondition = null;
-                            // console.log(response);
                             console.log('hours', response.data.forecast.forecastday[0]);
                             switch (response?.data?.forecast?.forecastday[0]?.hour[0]?.condition?.code) {
                                 case 1000:
@@ -380,6 +368,7 @@
                                 temp_c: Math.round(response?.data?.forecast?.forecastday[0]?.hour[0]?.feelslike_c),
                                 condition: imgCondition,
                             });
+
                             this.nextThreeHours.sort((a, b) => {return a.hour - b.hour});
                         })
                         .catch((error) => console.log(error.message));
@@ -413,9 +402,13 @@
                 if(locale === 'en') {
                     hours = new Date().toLocaleTimeString(locale, {hour: '2-digit', minute:'2-digit'});
                 } else {
-                    hours = new Date().toLocaleTimeString(locale);
+                    hours = new Date().toLocaleTimeString(locale, {hour: '2-digit', minute:'2-digit'});
                 }
+
                 this.clock = hours;
+                if(this.clock >= "22:00" || this.clock >= "10:00PM") {
+                    this.pastTenPm = true;
+                }
             },
         }
     }
