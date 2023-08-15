@@ -26,5 +26,8 @@
     "back_to_dashboard": "Back to Dashboard",
     "manage_your_account_information_and_settings": "Manage your account information and settings",
     "here_you_can_manage_your_personal_data_update_contact_information_adjust_privacy_preferences": "Here, you can manage your personal data, update contact information, adjust privacy preferences.",
-    "general_information": "General information"
+    "general_information": "General information",
+    "email": "Email",
+    "username": "Username",
+    "save": "Save"
 }
