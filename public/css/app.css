@@ -1797,6 +1797,10 @@ select {
     padding-bottom: 2rem;
   }
 
+  .lg\:pb-2 {
+    padding-bottom: 0.5rem;
+  }
+
   .lg\:align-middle {
     vertical-align: middle;
   }

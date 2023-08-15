@@ -12,6 +12,11 @@ window.saveStorage = function(name, data){
     });
 };
 
+window.setLocale = function(locale) {
+    moment.locale(locale);
+    console.log('locale set to ' + locale);
+};
+
 // Convert date to yyyy-mm-dd date string
 window.formatDate = function(date) {
     let year = date.toLocaleString("default", { year: "numeric" });
@@ -26,4 +31,13 @@ window.formatDate = function(date) {
 window.convertFrom12To24Format = function(time) {
     let convertedTime = moment(time, ["h:mm A"]).format("HH:mm");
     return convertedTime;
+}
+
+window.isAfterTenPm = function(hour) {
+    let convertedHour = moment(hour, 'HH:mm');
+    let hourToCompare = moment('22:00', 'HH:mm');
+    if(locale === 'en') {
+        convertedHour = convertFrom12To24Format(hour);
+    }
+    return convertedHour.isAfter(hourToCompare);
 }
