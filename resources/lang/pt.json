@@ -24,5 +24,7 @@
     "settings": "Definições",
     "account_settings": "Definições de Conta",
     "back_to_dashboard": "Voltar para a página inicial",
-    "manage_your_account_information_and_settings": "Gerir as informações e definições da sua conta"
+    "manage_your_account_information_and_settings": "Gerir as informações e definições da sua conta",
+    "here_you_can_manage_your_personal_data_update_contact_information_adjust_privacy_preferences": "Aqui, você pode gerir os seus dados pessoais, atualizar as informações de contato e ajustar preferências de privacidade.",
+    "general_information": "Informações Gerais"
 }

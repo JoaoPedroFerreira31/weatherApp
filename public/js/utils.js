@@ -24563,7 +24563,7 @@ window.isAfterTenPm = function (hour) {
   var convertedHour = moment__WEBPACK_IMPORTED_MODULE_1___default()(hour, 'HH:mm');
   var hourToCompare = moment__WEBPACK_IMPORTED_MODULE_1___default()('22:00', 'HH:mm');
   if (locale === 'en') {
-    convertedHour = convertFrom12To24Format(hour);
+    convertedHour = moment__WEBPACK_IMPORTED_MODULE_1___default()(convertFrom12To24Format(hour), 'HH:mm');
   }
   return convertedHour.isAfter(hourToCompare);
 };

@@ -37,7 +37,7 @@ window.isAfterTenPm = function(hour) {
     let convertedHour = moment(hour, 'HH:mm');
     let hourToCompare = moment('22:00', 'HH:mm');
     if(locale === 'en') {
-        convertedHour = convertFrom12To24Format(hour);
+        convertedHour = moment(convertFrom12To24Format(hour), 'HH:mm');
     }
     return convertedHour.isAfter(hourToCompare);
 }
