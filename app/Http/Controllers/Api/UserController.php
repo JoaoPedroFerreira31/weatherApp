@@ -3,15 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
-use \Illuminate\Http\Request;
-use App\Http\Requests\StoreUserRequest;
+use \Illuminate\Http\Request;;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateUserRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 
 class UserController extends Controller
@@ -35,6 +31,20 @@ class UserController extends Controller
     */
     public function show(Request $request, User $user)
     {
+        return new UserResource($user);
+    }
+
+    /**
+    * @param \App\Http\Requests\UpdateUserRequest $request
+    * @return \Illuminate\Http\Response
+    */
+    public function update(UpdateUserRequest $request, User $user)
+    {
+        logger($request);
+        $validated = $request->validated();
+
+        $user->update($validated);
+
         return new UserResource($user);
     }
 
