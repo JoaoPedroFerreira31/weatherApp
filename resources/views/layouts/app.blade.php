@@ -21,7 +21,7 @@
 
     </head>
     <body class="antialiased font-poppins">
-        <div class="min-h-screen bg-[#E3F4FE]">
+        <div x-data="dataApp" class="min-h-screen bg-[#E3F4FE]">
             @include('layouts.navigation')
 
             <!-- Page Heading -->
@@ -41,4 +41,15 @@
 <script>
     let locale = "{{ app()->getLocale() ?? 'en' }}";
     let key = "{{ env('API_KEY') }}";
+
+    function dataApp() {
+        return {
+            init() {
+                setLocale(locale);
+            },
+            navigateTo(link) {
+                window.location.assign(link);
+            },
+        }
+    }
 </script>

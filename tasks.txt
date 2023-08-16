@@ -1,7 +1,9 @@
 DONE - Adicionar tradução
-- Criar pagina de configuração de utilizador
+WIP - Criar pagina de configuração de utilizador
 DONE - Colocar dados dinamicos
-- Tornar site responsive
+- Responsive website
 - Dynamic images with icon code (Weather API)
 - Colocar duas medidas de temperatura (F and Cº)
+- Dynamic searchBar
+- Corrigir erro three hour forecast after midnight
 

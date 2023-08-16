@@ -24534,6 +24534,10 @@ window.saveStorage = function (name, data) {
     return false;
   });
 };
+window.setLocale = function (locale) {
+  moment__WEBPACK_IMPORTED_MODULE_1___default().locale(locale);
+  console.log('locale set to ' + locale);
+};
 
 // Convert date to yyyy-mm-dd date string
 window.formatDate = function (date) {
@@ -24554,6 +24558,14 @@ window.formatDate = function (date) {
 window.convertFrom12To24Format = function (time) {
   var convertedTime = moment__WEBPACK_IMPORTED_MODULE_1___default()(time, ["h:mm A"]).format("HH:mm");
   return convertedTime;
+};
+window.isAfterTenPm = function (hour) {
+  var convertedHour = moment__WEBPACK_IMPORTED_MODULE_1___default()(hour, 'HH:mm');
+  var hourToCompare = moment__WEBPACK_IMPORTED_MODULE_1___default()('22:00', 'HH:mm');
+  if (locale === 'en') {
+    convertedHour = moment__WEBPACK_IMPORTED_MODULE_1___default()(convertFrom12To24Format(hour), 'HH:mm');
+  }
+  return convertedHour.isAfter(hourToCompare);
 };
 })();
 

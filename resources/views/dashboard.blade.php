@@ -66,24 +66,20 @@
                     <span class="-mt-3 text-[75px] text-center" x-text="(weatherData?.humidity ?? 0) + ' %'  "></span>
                     <span class="-mt-5 -ml-20 text-center" x-text="humidityDescription"></span>
                 </div>
-                <div class="inline-flex justify-center w-full p-7 gap-x-4">
-                    <div class="flex flex-col gap-y-0.5">
-                        <span class="text-xs text-gray-400 pl-0.5">@lang('low')</span>
-                        <span :class="weatherData?.humidity > 0 || weatherData?.humidity <= 25 ? 'bg-blue-400' :  'bg-gray-300'" class="py-2 px-9 rounded-xl"></span>
+                <div class="flex flex-col p-5 mb-1 ">
+                    <div class="inline-flex justify-between lg:pb-2">
+                        <span class="text-gray-900 dark:text-white" x-text="humidityDescription"></span>
+                        <span class="text-gray-900 dark:text-white" x-text="(weatherData?.humidity ?? 0) + ' %'"></span>
                     </div>
-                    <div class="flex flex-col gap-y-0.5">
-                        <span class="text-xs text-gray-400 pl-0.5">@lang('normal')</span>
-                        <span :class="weatherData?.humidity > 25 || weatherData?.humidity <= 75 ? 'bg-blue-400' :  'bg-gray-300'" class="py-2 bg-gray-300 px-9 rounded-xl"></span>
-                    </div>
-                    <div class="flex flex-col gap-y-0.5">
-                        <span class="text-xs text-gray-400 pl-0.5">@lang('high')</span>
-                        <span :class="weatherData?.humidity > 75 || weatherData?.humidity <= 100 ? 'bg-blue-400' :  'bg-gray-300'" class="py-2 bg-gray-300 px-9 rounded-xl"></span>
+                    <div class="w-full h-4 bg-gray-200 rounded-full dark:bg-gray-700">
+                        <div class="h-4 bg-blue-400 rounded-full" :style="`width: ${weatherData?.humidity}%;`"></div>
                     </div>
                 </div>
             </div>
         </div>
         {{-- END Humidity Card --}}
 
+        {{-- Forecast of the week card --}}
         <div
             class="flex flex-col px-12 py-6 mx-5 bg-white shadow-lg rounded-2xl lg:p-6 lg:mt-2 lg:col-span-2 lg:row-span-2">
             <div class="flex flex-col mb-3">
@@ -119,38 +115,12 @@
                             class="px-4 py-2 whitespace-nowrap dark:text-white" :class="formatDate(date) === record.date ? 'font-semibold' : 'font-medium'" x-text="formatDate(date) === record.date ? Lang.get('strings.today') : record.date">
                         </th>
                         <td class="px-2 py-2 text-center" :class="formatDate(date) === record.date ? 'font-semibold' : 'font-medium'" x-text="Math.round(record?.day?.maxtemp_c) + ' °C'">
-
                         </td>
                         <td class="px-2 py-2 text-center" :class="formatDate(date) === record.date ? 'font-semibold' : 'font-medium'" x-text="Math.round(record?.day?.mintemp_c) + ' °C'">
 
                         </td>
                     </tr>
                     </template>
-                    {{-- <tr class="text-lg text-gray-500 dark:text-white">
-                        <th scope="row" class="px-4 py-2 font-medium whitespace-nowrap dark:text-white">Tuesday</th>
-                        <td class="px-2 py-3 text-center">25°C</td>
-                        <td class="px-2 py-3 text-center">16°C</td>
-                    </tr>
-                    <tr class="text-lg text-gray-500 dark:text-white">
-                        <th scope="row" class="px-4 py-2 font-medium whitespace-nowrap dark:text-white">Wednesday</th>
-                        <td class="px-2 py-3 text-center">32°C</td>
-                        <td class="px-2 py-3 text-center">18°C</td>
-                    </tr>
-                    <tr class="text-lg text-gray-500 dark:text-white">
-                        <th scope="row" class="px-4 py-2 font-medium whitespace-nowrap dark:text-white">Thursday</th>
-                        <td class="px-2 py-3 text-center">29°C</td>
-                        <td class="px-2 py-3 text-center">18°C</td>
-                    </tr>
-                    <tr class="text-lg text-gray-500 dark:text-white">
-                        <th scope="row" class="px-4 py-2 font-medium whitespace-nowrap dark:text-white">Friday</th>
-                        <td class="px-2 py-3 text-center">30°C</td>
-                        <td class="px-2 py-3 text-center">19°C</td>
-                    </tr>
-                    <tr class="text-lg text-gray-500 dark:text-white">
-                        <th scope="row" class="px-4 py-2 font-medium whitespace-nowrap dark:text-white">Saturday</th>
-                        <td class="px-2 py-3 text-center">28°C</td>
-                        <td class="px-2 py-3 text-center">19°C</td>
-                    </tr> --}}
                 </tbody>
             </table>
         </div>
@@ -197,7 +167,7 @@
         {{-- END Sunrise Info Card --}}
 
         {{-- 3 ROW --}}
-        <div class="grid grid-cols-3 py-2 mx-auto lg:px-4 lg:w-full lg:col-span-2 gap-x-2 lg:gap-x-6" >
+        <div :class="pastTenPm ? 'lg:grid-col-1' : 'lg:grid-cols-3'" class="grid py-2 mx-auto grid-col-1 lg:px-4 lg:w-full lg:col-span-2 gap-x-2 lg:gap-x-6" >
             <template x-for="weatherData in nextThreeHours">
                 <div class="px-8 py-24 overflow-hidden bg-white shadow-lg lg:py-8 rounded-2xl">
                     <div class="flex flex-col justify-center gap-y-1">
@@ -262,6 +232,7 @@
             imagesFolder: '{{ asset("weather_icon_pack/") }}',
             hasAlerts: false,
             uvIndex: null,
+            pastTenPm: false,
             humidityDescription: Lang.get('strings.unknown_humidity'),
             init(){
 
@@ -311,13 +282,14 @@
                 }
 
                 console.log(locale);
-                this.getUserCurrentPosition();
                 this.weekday = date.toLocaleDateString(locale, {weekday: 'long'});
 
                 this.startClock();
                 setInterval(() =>{
                     this.startClock();
                 }, 1000);
+
+                this.pastTenPm = isAfterTenPm(this.clock);
 
                 if(navigator.onLine) {
                     this.fetchData();
@@ -350,7 +322,6 @@
                 axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&q=Santarem%Portugal&days=7&lang=${locale}&aqi=no`)
                 .then((response) => {
                     this.weatherWeekData = response.data.forecast.forecastday;
-                    console.log(this.weatherWeekData);
                     saveStorage('weather-week-data', response.data.forecast.forecastday);
                 })
                 .catch((error) => console.log(error.message));
@@ -358,7 +329,9 @@
             },
             processWeatherData(){
                 this.hour = date.getHours();
+                this.nextThreeHoursForecast();
 
+                /* Process sunset/sunrise time format*/
                 if(locale === 'pt') {
                     this.sunrise = convertFrom12To24Format(this.astroData.sunrise);
                     this.sunset = convertFrom12To24Format(this.astroData.sunset);
@@ -367,15 +340,50 @@
                     this.sunrise = this.astroData.sunrise;
                 }
 
+                //UV index (Description)
+                if(0 <= this.weatherData.uv && this.weatherData.uv <= 3){
+                    this.uvIndex = Lang.get('strings.low');
+                }
+                else if (3 < this.weatherData.uv && this.weatherData.uv <= 7){
+                    this.uvIndex = Lang.get('strings.moderate');
+                }
+                else if (7 < this.weatherData.uv && this.weatherData.uv <= 10){
+                    this.uvIndex = Lang.get('strings.extreme');
+                }
+
+                //Humidity (Description)
+                if(0 <= this.weatherData.humidity && this.weatherData.humidity <= 25){
+                    this.humidityDescription = Lang.get('strings.low');
+                }
+                else if (25 < this.weatherData.humidity && this.weatherData.humidity <= 75){
+                    this.humidityDescription = Lang.get('strings.normal');
+                }
+                else if (75 < this.weatherData.humidity && this.weatherData.humidity <= 100){
+                    this.humidityDescription = Lang.get('strings.high');
+                }
+
+            },
+            startClock() {
+                let hours = null;
+                if(locale === 'en') {
+                    hours = new Date().toLocaleTimeString(locale, {hour: '2-digit', minute:'2-digit'});
+                } else {
+                    hours = new Date().toLocaleTimeString(locale, {hour: '2-digit', minute:'2-digit'});
+                }
+                this.clock = hours;
+            },
+            nextThreeHoursForecast() {
+                /* Get the forecast for the next three hours */
                 if(this.hour){
                     let h = this.hour;
-                    for (let index = 1; index < 4; index++) {
+                    let loopNumber = !this.pastTenPm ? 4 : 2;
+
+                    for (let index = 1; index < loopNumber; index++) {
                         let hourToSearch = h + index;
                         axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&lang=${locale}&q=Santarem%Portugal?days=1&&hour=${hourToSearch}&aqi=no&alerts=no`)
                         .then((response) => {
                             let imgCondition = null;
-                            // console.log(response);
-                            console.log('hours', response.data.forecast.forecastday[0]);
+
                             switch (response?.data?.forecast?.forecastday[0]?.hour[0]?.condition?.code) {
                                 case 1000:
                                 imgCondition ='sun.gif';
@@ -390,62 +398,19 @@
                                 imgCondition ='clouds.gif';
                                 break;
                             };
+
                             this.nextThreeHours.push({
                                 hour: new Date((response?.data?.forecast?.forecastday[0]?.hour[0]?.time_epoch * 1000)).getHours(),
                                 temp_c: Math.round(response?.data?.forecast?.forecastday[0]?.hour[0]?.feelslike_c),
                                 condition: imgCondition,
                             });
+
                             this.nextThreeHours.sort((a, b) => {return a.hour - b.hour});
                         })
                         .catch((error) => console.log(error.message));
                     }
                 }
-
-                //UV index
-                if(0 <= this.weatherData.uv && this.weatherData.uv <= 3){
-                    console.log('entrei 0-3');
-                    this.uvIndex = Lang.get('strings.low');
-                }
-                else if (3 < this.weatherData.uv && this.weatherData.uv <= 7){
-                    console.log('entrei 3-7');
-                    this.uvIndex = Lang.get('strings.moderate');
-                }
-                else if (7 < this.weatherData.uv && this.weatherData.uv <= 10){
-                    console.log('entrei 7-10');
-                    this.uvIndex = Lang.get('strings.extreme');
-                }
-
-                //Humidity
-                if(0 <= this.weatherData.humidity && this.weatherData.humidity <= 25){
-                    this.humidityDescription = Lang.get('strings.low');
-                }
-                else if (25 < this.weatherData.humidity && this.weatherData.humidity <= 75){
-                    this.humidityDescription = Lang.get('strings.normal');
-                }
-                else if (75 < this.weatherData.humidity && this.weatherData.humidity <= 100){
-                    this.humidityDescription = Lang.get('strings.high');
-                }
-            },
-            startClock() {
-                let hours = null;
-                if(locale === 'en') {
-                    hours = new Date().toLocaleTimeString(locale, {hour: '2-digit', minute:'2-digit'});
-                } else {
-                    hours = new Date().toLocaleTimeString(locale);
-                }
-                this.clock = hours;
-            },
-            getUserCurrentPosition() {
-                if(navigator.onLine && "geolocation" in navigator) {
-                    console.log('Geolocation is available');
-                    navigator.geolocation.getCurrentPosition((position) => {
-                        console.log(position);
-                    });
-                } else {
-                    console.log('Geolocation is not supported by this browser.');
-                }
-
-            },
+            }
         }
     }
 </script>
