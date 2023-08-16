@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LanguageController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,8 +25,13 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
+
 Route::get('/settings', function () {
-    return view('settings');
+    $data = [
+        'record' => Auth::user(),
+    ];
+
+    return view('settings', $data);
 })->middleware(['auth'])->name('settings');
 
 require __DIR__.'/auth.php';
