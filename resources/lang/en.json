@@ -29,5 +29,8 @@
     "general_information": "General information",
     "email": "Email",
     "username": "Username",
-    "save": "Save"
+    "save": "Save",
+    "saving": "Saving",
+    "edit": "Edit",
+    "cancel": "Cancel"
 }

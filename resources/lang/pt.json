@@ -29,5 +29,8 @@
     "general_information": "Informações Gerais",
     "email": "Endereço de email",
     "username": "Nome de Utilizador",
-    "save": "Guardar"
+    "save": "Guardar",
+    "saving": "Guardando",
+    "edit": "Editar",
+    "cancel": "Cancelar"
 }
