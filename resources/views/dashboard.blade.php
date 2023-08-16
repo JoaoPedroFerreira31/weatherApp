@@ -67,7 +67,7 @@
                     <span class="-mt-5 -ml-20 text-center" x-text="humidityDescription"></span>
                 </div>
                 <div class="flex flex-col p-5 mb-1 ">
-                    <div class="inline-flex justify-between">
+                    <div class="inline-flex justify-between lg:pb-2">
                         <span class="text-gray-900 dark:text-white" x-text="humidityDescription"></span>
                         <span class="text-gray-900 dark:text-white" x-text="(weatherData?.humidity ?? 0) + ' %'"></span>
                     </div>
@@ -115,7 +115,6 @@
                             class="px-4 py-2 whitespace-nowrap dark:text-white" :class="formatDate(date) === record.date ? 'font-semibold' : 'font-medium'" x-text="formatDate(date) === record.date ? Lang.get('strings.today') : record.date">
                         </th>
                         <td class="px-2 py-2 text-center" :class="formatDate(date) === record.date ? 'font-semibold' : 'font-medium'" x-text="Math.round(record?.day?.maxtemp_c) + ' °C'">
-
                         </td>
                         <td class="px-2 py-2 text-center" :class="formatDate(date) === record.date ? 'font-semibold' : 'font-medium'" x-text="Math.round(record?.day?.mintemp_c) + ' °C'">
 
@@ -290,6 +289,8 @@
                     this.startClock();
                 }, 1000);
 
+                this.pastTenPm = isAfterTenPm(this.clock);
+
                 if(navigator.onLine) {
                     this.fetchData();
                 }
@@ -328,6 +329,7 @@
             },
             processWeatherData(){
                 this.hour = date.getHours();
+                this.nextThreeHoursForecast();
 
                 /* Process sunset/sunrise time format*/
                 if(locale === 'pt') {
@@ -336,43 +338,6 @@
                 } else {
                     this.sunset = this.astroData.sunset;
                     this.sunrise = this.astroData.sunrise;
-                }
-
-                /* Get the forecast for the next three hours */
-                if(this.hour){
-                    let h = this.hour;
-                    let loopNumber = !this.pastTenPm ? 4 : 2;
-
-                    for (let index = 1; index < loopNumber; index++) {
-                        let hourToSearch = h + index;
-                        axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&lang=${locale}&q=Santarem%Portugal?days=1&&hour=${hourToSearch}&aqi=no&alerts=no`)
-                        .then((response) => {
-                            let imgCondition = null;
-                            console.log('hours', response.data.forecast.forecastday[0]);
-                            switch (response?.data?.forecast?.forecastday[0]?.hour[0]?.condition?.code) {
-                                case 1000:
-                                imgCondition ='sun.gif';
-                                break;
-                                case 1003:
-                                imgCondition ='cloudy.gif';
-                                break;
-                                case 1006:
-                                imgCondition ='clouds.gif';
-                                break;
-                                case 1009:
-                                imgCondition ='clouds.gif';
-                                break;
-                            };
-                            this.nextThreeHours.push({
-                                hour: new Date((response?.data?.forecast?.forecastday[0]?.hour[0]?.time_epoch * 1000)).getHours(),
-                                temp_c: Math.round(response?.data?.forecast?.forecastday[0]?.hour[0]?.feelslike_c),
-                                condition: imgCondition,
-                            });
-
-                            this.nextThreeHours.sort((a, b) => {return a.hour - b.hour});
-                        })
-                        .catch((error) => console.log(error.message));
-                    }
                 }
 
                 //UV index (Description)
@@ -396,6 +361,7 @@
                 else if (75 < this.weatherData.humidity && this.weatherData.humidity <= 100){
                     this.humidityDescription = Lang.get('strings.high');
                 }
+
             },
             startClock() {
                 let hours = null;
@@ -404,12 +370,47 @@
                 } else {
                     hours = new Date().toLocaleTimeString(locale, {hour: '2-digit', minute:'2-digit'});
                 }
-
                 this.clock = hours;
-                if(this.clock >= "22:00" || this.clock >= "10:00PM") {
-                    this.pastTenPm = true;
-                }
             },
+            nextThreeHoursForecast() {
+                /* Get the forecast for the next three hours */
+                if(this.hour){
+                    let h = this.hour;
+                    let loopNumber = !this.pastTenPm ? 4 : 2;
+
+                    for (let index = 1; index < loopNumber; index++) {
+                        let hourToSearch = h + index;
+                        axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&lang=${locale}&q=Santarem%Portugal?days=1&&hour=${hourToSearch}&aqi=no&alerts=no`)
+                        .then((response) => {
+                            let imgCondition = null;
+
+                            switch (response?.data?.forecast?.forecastday[0]?.hour[0]?.condition?.code) {
+                                case 1000:
+                                imgCondition ='sun.gif';
+                                break;
+                                case 1003:
+                                imgCondition ='cloudy.gif';
+                                break;
+                                case 1006:
+                                imgCondition ='clouds.gif';
+                                break;
+                                case 1009:
+                                imgCondition ='clouds.gif';
+                                break;
+                            };
+
+                            this.nextThreeHours.push({
+                                hour: new Date((response?.data?.forecast?.forecastday[0]?.hour[0]?.time_epoch * 1000)).getHours(),
+                                temp_c: Math.round(response?.data?.forecast?.forecastday[0]?.hour[0]?.feelslike_c),
+                                condition: imgCondition,
+                            });
+
+                            this.nextThreeHours.sort((a, b) => {return a.hour - b.hour});
+                        })
+                        .catch((error) => console.log(error.message));
+                    }
+                }
+            }
         }
     }
 </script>

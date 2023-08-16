@@ -5,4 +5,5 @@ DONE - Colocar dados dinamicos
 - Dynamic images with icon code (Weather API)
 - Colocar duas medidas de temperatura (F and Cº)
 - Dynamic searchBar
+- Corrigir erro three hour forecast after midnight
 
