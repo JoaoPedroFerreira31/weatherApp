@@ -6,4 +6,5 @@ DONE - Colocar dados dinamicos
 - Colocar duas medidas de temperatura (F and Cº)
 - Dynamic searchBar
 - Corrigir erro three hour forecast after midnight
+- Enable email verification after register
 
