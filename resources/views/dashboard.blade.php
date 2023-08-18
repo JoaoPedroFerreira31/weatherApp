@@ -295,7 +295,7 @@
             },
             fetchData() {
                 // Weather data
-                axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&lang=${locale}&q=Santarem%Portugal&days=1&aqi=no&alerts=yes`)
+                axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&lang=${locale}&q=Lisboa&days=1&aqi=no&alerts=yes`)
                 .then((response) => {
                     // console.log('Weather Forecast', response?.data);
                     this.weatherData = response?.data?.current;
@@ -317,7 +317,7 @@
                 .catch((error) => console.log(error.message));
 
                 //Weather Week data
-                axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&q=Santarem%Portugal&days=7&lang=${locale}&aqi=no`)
+                axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&q=Lisboa&days=7&lang=${locale}&aqi=no`)
                 .then((response) => {
                     this.weatherWeekData = response.data.forecast.forecastday;
                     saveStorage('weather-week-data', response.data.forecast.forecastday);
