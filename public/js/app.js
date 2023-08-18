@@ -5316,6 +5316,14 @@ window.isAfterTenPm = function (hour) {
   }
   return convertedHour.isAfter(hourToCompare);
 };
+window.isAfterTwelvePm = function (hour) {
+  var convertedHour = moment__WEBPACK_IMPORTED_MODULE_1___default()(hour, 'HH:mm');
+  var hourToCompare = moment__WEBPACK_IMPORTED_MODULE_1___default()('12:00', 'HH:mm');
+  if (locale === 'en') {
+    convertedHour = moment__WEBPACK_IMPORTED_MODULE_1___default()(convertFrom12To24Format(hour), 'HH:mm');
+  }
+  return convertedHour.isAfter(hourToCompare);
+};
 
 /***/ }),
 

@@ -41,3 +41,12 @@ window.isAfterTenPm = function(hour) {
     }
     return convertedHour.isAfter(hourToCompare);
 }
+
+window.isAfterTwelvePm = function(hour) {
+    let convertedHour = moment(hour, 'HH:mm');
+    let hourToCompare = moment('12:00', 'HH:mm');
+    if(locale === 'en') {
+        convertedHour = moment(convertFrom12To24Format(hour), 'HH:mm');
+    }
+    return convertedHour.isAfter(hourToCompare);
+}

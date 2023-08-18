@@ -1,11 +1,7 @@
 <x-app-layout>
-    {{-- <x-slot name="header">
-        <h2 class="text-xl font-semibold leading-tight text-gray-800">
-            @lang('dashboard')
-        </h2>
-    </x-slot> --}}
 
     <div x-data="data()" class="grid grid-cols-1 py-8 lg:grid-cols-6 lg:gap-y-4 lg:px-8" >
+
         {{-- 1 ROW --}}
         {{-- Welcome card --}}
         <div class="py-2 mx-auto lg:col-span-2 lg:gap-3 lg:flex lg:w-full lg:flex-col lg:px-4">
@@ -173,7 +169,7 @@
                     <div class="flex flex-col justify-center gap-y-1">
                         <span class="text-xl font-medium text-center text-gray-900" x-text="weatherData.temp_c + ' ° C'"></span>
                         <img class="w-[110px] h-[110px] mx-auto" src="" :src="imagesFolder+'/'+weatherData?.condition" >
-                        <span class="text-xl font-medium text-center text-gray-900" x-text="weatherData.hour + (locale === 'pt' ? ':00h' : ':00pm') "></span>
+                        <span class="text-xl font-medium text-center text-gray-900" x-text="weatherData.hour + (locale === 'pt' ? ':00h' : (pastTwelvePm ? ':00 PM' : ':00 AM')) "></span>
                     </div>
                 </div>
             </template>
@@ -233,6 +229,7 @@
             hasAlerts: false,
             uvIndex: null,
             pastTenPm: false,
+            pastTwelvePm: false,
             humidityDescription: Lang.get('strings.unknown_humidity'),
             init(){
 
@@ -290,6 +287,7 @@
                 }, 1000);
 
                 this.pastTenPm = isAfterTenPm(this.clock);
+                this.pastTwelvePm = isAfterTwelvePm(this.clock);
 
                 if(navigator.onLine) {
                     this.fetchData();
@@ -297,7 +295,7 @@
             },
             fetchData() {
                 // Weather data
-                axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&lang=${locale}&q=Santarem%Portugal&days=1&aqi=no&alerts=yes`)
+                axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&lang=${locale}&q=Lisboa&days=1&aqi=no&alerts=yes`)
                 .then((response) => {
                     // console.log('Weather Forecast', response?.data);
                     this.weatherData = response?.data?.current;
@@ -319,7 +317,7 @@
                 .catch((error) => console.log(error.message));
 
                 //Weather Week data
-                axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&q=Santarem%Portugal&days=7&lang=${locale}&aqi=no`)
+                axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&q=Lisboa&days=7&lang=${locale}&aqi=no`)
                 .then((response) => {
                     this.weatherWeekData = response.data.forecast.forecastday;
                     saveStorage('weather-week-data', response.data.forecast.forecastday);
