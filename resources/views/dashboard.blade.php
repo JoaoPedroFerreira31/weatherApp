@@ -18,41 +18,22 @@
                 </div>
             </div>
             {{-- Weather text information in large screens --}}
-            <template x-if="hasAlerts">
-            <div class="hidden p-4 overflow-hidden align-middle bg-white shadow-lg lg:block rounded-2xl">
-                <marquee behavior="scroll" direction="left" scrollamount="10" class="font-medium text-gray-900 " x-text="alerts?.alert[0]?.desc"></marquee>
-            </div>
-            </template>
-            <template x-if="!hasAlerts">
-            <div class="hidden p-4 overflow-hidden align-middle bg-white shadow-lg lg:block rounded-2xl">
-                <div class="inline-flex justify-between w-full p-1">
-                    <div class="inline-flex">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 my-auto">
-                            <path fill-rule="evenodd"
-                                d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <span class="ml-2 text-lg font-medium text-gray-900" x-text="location?.region + ', ' + location?.country"></span>
+            <div class="p-4 overflow-hidden align-middle bg-white shadow-lg  lg:block rounded-2xl">
+                <form class="inline-flex w-full gap-x-2" @submit.prevent="searchNewCity()">
+                    <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">@lang('search')</label>
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                            </svg>
+                        </div>
+                        <input type="text" id="default-search" class="block w-full pl-10 text-sm text-gray-900 border-none rounded-lg outline-none bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" :placeholder="Lang.get('strings.search_by_city')" x-model="city" required>
                     </div>
-                    <span class="inline-flex text-lg font-medium text-gray-900 gap-x-4">
-                        <span x-text="(Math.round(forecastData?.maxtemp_c)) + ' °C'"></span>
-                        <span x-text="(Math.round(forecastData?.mintemp_c)) + ' °C'"></span>
-                    </span>
-                </div>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg right-1 bottom-1 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">@lang('search')</button>
+                </form>
             </div>
-            </template>
         </div>
         {{-- END Welcome card --}}
-
-        {{-- Weather text information in mobile screen --}}
-        <template x-if="hasAlerts">
-        <div class="py-2 mx-auto lg:hidden sm:block lg:px-4">
-            <div class="p-12 overflow-hidden bg-white shadow-lg lg:p-24 rounded-2xl">
-                <marquee behavior="scroll" direction="left" class="font-medium text-gray-900" x-text="alerts?.alert[0]?.desc"></marquee>
-            </div>
-        </div>
-        </template>
-        {{-- END Weather text information in mobile screen --}}
 
         {{-- Humidity Card --}}
         <div class="w-full py-2 mx-auto lg:col-span-2 lg:px-4">
@@ -224,13 +205,12 @@
             astroData: null,
             nextThreeHours: [],
             forecastData: null,
-            alerts: [],
             imagesFolder: '{{ asset("weather_icon_pack/") }}',
-            hasAlerts: false,
             uvIndex: null,
             pastTenPm: false,
             pastTwelvePm: false,
             humidityDescription: Lang.get('strings.unknown_humidity'),
+            city: null,
             init(){
 
                 // load data from localStorage
@@ -270,12 +250,6 @@
                     })
                     .catch((err) => { console.log(err) });
 
-                    //Alerts
-                    localForage.getItem('weather-alerts')
-                    .then((value) => {
-                        this.alerts = value;
-                    })
-                    .catch((err) => { console.log(err) });
                 }
 
                 console.log(locale);
@@ -292,38 +266,61 @@
                 if(navigator.onLine) {
                     this.fetchData();
                 }
+
             },
             fetchData() {
-                // Weather data
-                axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&lang=${locale}&q=Lisboa&days=1&aqi=no&alerts=yes`)
-                .then((response) => {
-                    // console.log('Weather Forecast', response?.data);
-                    this.weatherData = response?.data?.current;
-                    this.location = response?.data?.location;
-                    this.astroData = response?.data?.forecast?.forecastday[0]?.astro;
-                    this.forecastData = response?.data?.forecast?.forecastday[0]?.day;
-                    if(response?.data?.alerts?.alert?.length > 0) {
-                        this.alerts = response?.data?.alerts;
-                        this.hasAlerts = true;
-                        saveStorage('weather-alerts', response?.data?.alerts);
-                    }
+                if(this.city !== null) {
+                    // Weather data
+                    axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&lang=${locale}&q=${this.city}&days=1&aqi=no&alerts=no`)
+                    .then((response) => {
+                        // console.log('Weather Forecast', response?.data);
+                        this.weatherData = response?.data?.current;
+                        this.location = response?.data?.location;
+                        this.astroData = response?.data?.forecast?.forecastday[0]?.astro;
+                        this.forecastData = response?.data?.forecast?.forecastday[0]?.day;
 
-                    saveStorage('weather-data', response?.data?.current);
-                    saveStorage('weather-location', response?.data?.location);
-                    saveStorage('weather-astro-data', response?.data?.forecast.forecastday[0]?.astro);
-                    saveStorage('weather-forecast-data', response?.data?.forecast?.forecastday[0]?.day);
-                    this.processWeatherData();
-                })
-                .catch((error) => console.log(error.message));
+                        saveStorage('weather-data', response?.data?.current);
+                        saveStorage('weather-location', response?.data?.location);
+                        saveStorage('weather-astro-data', response?.data?.forecast.forecastday[0]?.astro);
+                        saveStorage('weather-forecast-data', response?.data?.forecast?.forecastday[0]?.day);
+                        this.processWeatherData();
+                    })
+                    .catch((error) => console.log(error.message));
 
-                //Weather Week data
-                axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&q=Lisboa&days=7&lang=${locale}&aqi=no`)
-                .then((response) => {
-                    this.weatherWeekData = response.data.forecast.forecastday;
-                    saveStorage('weather-week-data', response.data.forecast.forecastday);
-                })
-                .catch((error) => console.log(error.message));
+                    //Weather Week data
+                    axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&q=${this.city}&days=7&lang=${locale}&aqi=no`)
+                    .then((response) => {
+                        this.weatherWeekData = response.data.forecast.forecastday;
+                        saveStorage('weather-week-data', response.data.forecast.forecastday);
+                    })
+                    .catch((error) => console.log(error.message));
 
+                } else {
+                    // Weather data
+                    axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&lang=${locale}&q=Lisboa%Portugal&days=1&aqi=no&alerts=no`)
+                    .then((response) => {
+                        // console.log('Weather Forecast', response?.data);
+                        this.weatherData = response?.data?.current;
+                        this.location = response?.data?.location;
+                        this.astroData = response?.data?.forecast?.forecastday[0]?.astro;
+                        this.forecastData = response?.data?.forecast?.forecastday[0]?.day;
+
+                        saveStorage('weather-data', response?.data?.current);
+                        saveStorage('weather-location', response?.data?.location);
+                        saveStorage('weather-astro-data', response?.data?.forecast.forecastday[0]?.astro);
+                        saveStorage('weather-forecast-data', response?.data?.forecast?.forecastday[0]?.day);
+                        this.processWeatherData();
+                    })
+                    .catch((error) => console.log(error.message));
+
+                    //Weather Week data
+                    axios.get(`http://api.weatherapi.com/v1/forecast.json?key=${key}&q=Lisboa%Portugal&days=7&lang=${locale}&aqi=no`)
+                    .then((response) => {
+                        this.weatherWeekData = response.data.forecast.forecastday;
+                        saveStorage('weather-week-data', response.data.forecast.forecastday);
+                    })
+                    .catch((error) => console.log(error.message));
+                }
             },
             processWeatherData(){
                 this.hour = date.getHours();
@@ -370,7 +367,12 @@
                 }
                 this.clock = hours;
             },
+            searchNewCity() {
+                this.fetchData();
+            },
             nextThreeHoursForecast() {
+                this.nextThreeHours = [];
+
                 /* Get the forecast for the next three hours */
                 if(this.hour){
                     let h = this.hour;

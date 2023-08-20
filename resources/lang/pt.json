@@ -32,5 +32,7 @@
     "save": "Guardar",
     "saving": "Guardando",
     "edit": "Editar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "search": "Pesquisar",
+    "search_by_city": "Pesquise por cidade"
 }
