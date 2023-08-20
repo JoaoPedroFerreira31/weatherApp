@@ -32,5 +32,7 @@
     "save": "Save",
     "saving": "Saving",
     "edit": "Edit",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "search": "Search",
+    "search_by_city": "Search by city..."
 }
