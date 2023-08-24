@@ -7,4 +7,6 @@ DONE - Colocar dados dinamicos
 - Dynamic searchBar
 - Corrigir erro three hour forecast after midnight
 - Enable email verification after register
+- Update website design (Dashboard and welcome page)
+- Mudar codigo para pedidos backend
 
