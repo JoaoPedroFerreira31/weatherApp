@@ -40,7 +40,7 @@
 </html>
 <script>
     let locale = "{{ app()->getLocale() ?? 'en' }}";
-    let key = "{{ env('API_KEY') }}";
+    let weatherKey = "{{ config('weather-app-config.weather_api_key') }}";
 
     function dataApp() {
         return {
