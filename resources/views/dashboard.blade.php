@@ -18,7 +18,7 @@
                 </div>
             </div>
             {{-- Weather text information in large screens --}}
-            <div class="p-4 overflow-hidden align-middle bg-white shadow-lg  lg:block rounded-2xl">
+            <div class="p-4 overflow-hidden align-middle bg-white shadow-lg lg:block rounded-2xl">
                 <form class="inline-flex w-full gap-x-2" @submit.prevent="searchNewCity()">
                     <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">@lang('search')</label>
                     <div class="relative w-full">
@@ -57,49 +57,51 @@
         {{-- END Humidity Card --}}
 
         {{-- Forecast of the week card --}}
-        <div
-            class="flex flex-col px-12 py-6 mx-5 bg-white shadow-lg rounded-2xl lg:p-6 lg:mt-2 lg:col-span-2 lg:row-span-2">
-            <div class="flex flex-col mb-3">
-                <h1 class="font-medium">@lang('forecast_of_the_week')</h1>
-                <div class="inline-flex items-center text-xs text-gray-500 gap-x-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3">
-                        <path fill-rule="evenodd"
-                            d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    <span class="font-medium" x-text="location?.region + ', ' + location?.country"></span>
+        <div class="w-full py-2 mx-auto lg:col-span-2 lg:px-4">
+            <div class="flex flex-col bg-white shadow-lg rounded-2xl">
+                <div class="flex flex-col p-4">
+                    <h1 class="font-medium">@lang('forecast_of_the_week')</h1>
+                    <div class="inline-flex items-center text-xs text-gray-500 gap-x-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3">
+                            <path fill-rule="evenodd"
+                                d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="font-medium" x-text="location?.region + ', ' + location?.country"></span>
+                    </div>
+                </div>
+                <div class="px-4 shadow-lg rounded-2xl">
+                    <table class="justify-center w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="justify-center text-gray-700 uppercase dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-1 py-1">
+
+                                </th>
+                                <th scope="col" class="px-1 py-2 text-xs text-center">
+                                    @lang('day')
+                                </th>
+                                <th scope="col" class="px-1 py-2 text-xs text-center">
+                                    @lang('night')
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="record in weatherWeekData" :key="record.date">
+                            <tr class="text-lg text-gray-900 bg-white dark:bg-gray-800">
+                                <th scope="row"
+                                    class="px-1 py-2 whitespace-nowrap dark:text-white" :class="formatDate(date) === record.date ? 'font-semibold' : 'font-medium'" x-text="formatDate(date) === record.date ? Lang.get('strings.today') : record.date">
+                                </th>
+                                <td class="px-1 py-2 text-center" :class="formatDate(date) === record.date ? 'font-semibold' : 'font-medium'" x-text="Math.round(record?.day?.maxtemp_c) + ' °C'">
+                                </td>
+                                <td class="px-1 py-2 text-center" :class="formatDate(date) === record.date ? 'font-semibold' : 'font-medium'" x-text="Math.round(record?.day?.mintemp_c) + ' °C'">
+
+                                </td>
+                            </tr>
+                            </template>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
-            <table class="justify-center w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="justify-center text-gray-700 uppercase dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-2 py-2">
-
-                        </th>
-                        <th scope="col" class="px-2 py-3 text-xs text-center">
-                            @lang('day')
-                        </th>
-                        <th scope="col" class="px-2 py-3 text-xs text-center">
-                            @lang('night')
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <template x-for="record in weatherWeekData" :key="record.date">
-                    <tr class="text-lg text-gray-900 bg-white dark:bg-gray-800">
-                        <th scope="row"
-                            class="px-4 py-2 whitespace-nowrap dark:text-white" :class="formatDate(date) === record.date ? 'font-semibold' : 'font-medium'" x-text="formatDate(date) === record.date ? Lang.get('strings.today') : record.date">
-                        </th>
-                        <td class="px-2 py-2 text-center" :class="formatDate(date) === record.date ? 'font-semibold' : 'font-medium'" x-text="Math.round(record?.day?.maxtemp_c) + ' °C'">
-                        </td>
-                        <td class="px-2 py-2 text-center" :class="formatDate(date) === record.date ? 'font-semibold' : 'font-medium'" x-text="Math.round(record?.day?.mintemp_c) + ' °C'">
-
-                        </td>
-                    </tr>
-                    </template>
-                </tbody>
-            </table>
         </div>
         {{-- END Forecast of the week card --}}
 
